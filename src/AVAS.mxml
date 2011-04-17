@@ -31,7 +31,8 @@
 				if (this.login.text == "") {
 					this.login.setStyle("borderColor", 0xFF0000);
 					this.login.setStyle("color", 0xFF0000);
-					Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
+					this.currentState = "erro";
+					//Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
 					return false;
 				} else {
 					this.login.setStyle("borderColor", 0x000000);
@@ -50,6 +51,8 @@
 				if (this.login.text != "aluno" || this.senha.text != "123" ) {					
 					this.login.setStyle("borderColor", 0xFF0000);
 					this.login.setStyle("color", 0xFF0000);
+					this.senha.setStyle("borderColor", 0xFF0000);
+					this.senha.setStyle("color", 0xFF0000);
 					Alert.show("Usuário ou Senha inválidos.\nClique em 'esqueci minha senha'\npara saber como proceder\ncaso tenha esquecido seu usuário\nou senha.", "Atenção: Dados não Conferem");
 					return false;
 				} else {
@@ -65,25 +68,54 @@
 				// TODO Auto-generated method stub
 			}
 
+
+			protected function linkbutton1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(this.detalhes.visible){
+					this.msgErro.height += this.detalhes.height;
+					this.btnDetalhes.y += this.detalhes.height;
+					this.btnFechar.y += this.detalhes.height;
+				}else{
+					this.msgErro.height -= this.detalhes.height;
+					this.btnDetalhes.y -= this.detalhes.height;
+					this.btnFechar.y -= this.detalhes.height;
+				}
+				this.detalhes.visible = !this.detalhes.visible;
+			}
+
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				//voltar para a tela anterior onde o erro aconteceu
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
 		<s:State name="login"/>
 		<s:State name="desktop"/>
+		<s:State name="professorDesktop"/>
+		<s:State name="aulas"/>
+		<s:State name="erro"/>
 	</s:states>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"
+	<s:Image includeIn="aulas,desktop,login,professorDesktop" x="0" y="0" width="800" height="600"
+			 scaleMode="stretch" source="imagens/wallpaper2.png"
 			 x.login="0" y.login="0"/>
-	<s:BorderContainer width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
-					   cornerRadius="20"
+	<s:BorderContainer includeIn="aulas,desktop,login,professorDesktop" width="780" height="495"
+					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20"
+					   x.aulas="10" y.aulas="10"
 					   x.desktop="10" y.desktop="10"
 					   x.login="281" y.login="221" width.login="248" height.login="179"
-					   backgroundAlpha.login="0.5">
-		<s:BorderContainer includeIn="desktop" x="30" y="30" width="100" height="120"
+					   backgroundAlpha.login="0.5"
+					   x.professorDesktop="10" y.professorDesktop="10">
+		<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="30" y="30" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false" rollOverColor="#3882F1"
 						   toolTip="Vídeos Relacionados">
@@ -104,23 +136,24 @@
 				 text="esqueci minha senha" textDecoration="underline"/>
 		<s:Image includeIn="login" right="7" top="7" width="28" height="28"
 				 source="imagens/icones/Help.png"/>
-		<s:BorderContainer includeIn="desktop" x="97.35" y="195.4" width="570" height="260"
+		<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="97.35" y="195.4" width="570" height="260"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false">
-			<mx:DateChooser left="10" bottom="10" width="271" height="202"
-							change="onSelecionaData(event)"/>
+			<mx:DateChooser includeIn="desktop,professorDesktop" left="10" bottom="10" width="271"
+							height="202" change="onSelecionaData(event)"/>
 			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
 					 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
-					 verticalAlign="justify"/>
+					 verticalAlign="justify"
+					 text.aulas="Arquivos de aulas"/>
 			<s:Label x="301.35" y="26" width="260" height="18" fontSize="15" fontWeight="normal"
-					 text="Atividades deste mês" textAlign="center"
-					 verticalAlign="justify"/>
+					 text="Atividades deste mês" textAlign="center" verticalAlign="justify"
+					 text.aulas="Arquivos complementares"/>
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
-		<mx:VRule includeIn="desktop" x="378" y="503" width="27" height="77"/>
+		<mx:VRule includeIn="aulas,desktop,professorDesktop" x="378" y="503" width="27" height="77"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="desktop" x="10" y="513" width="780" height="77"
+	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
 		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"/>
 		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"/>
@@ -130,11 +163,11 @@
 		<s:Image x="146" y="25" source="imagens/icones/atividades.png"/>
 		<s:Button x="527" y="11" width="116" height="57" label="          Fórum" cornerRadius="7"/>
 		<s:Image x="536" y="25" source="imagens/icones/forum.png"/>
-		<s:Button includeIn="desktop" x="261" y="11" width="116" height="57" label="          Vídeo Aulas"
+		<s:Button x="261" y="11" width="116" height="57" label="          Vídeo Aulas"
 				  cornerRadius="7"/>
-		<s:Image includeIn="desktop" x="267" y="25" source="imagens/icones/videoaula.png"/>
+		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="desktop" x="170" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="170" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Twitter do Curso">
 		<s:Image x="11.5" y="9.65" width="75" height="75"
@@ -143,17 +176,41 @@
 				 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
 				 verticalAlign="middle"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="desktop" x="660" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="660" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Informações e Configurações do Aluno">
-		<s:Image x="11.5" y="9.65" width="75" height="75"
-				 source="imagens/icones/aluno.png"/>
+		<s:Image source="imagens/icones/aluno.png"
+				 x.aulas="11.5" y.aulas="9.65" width.aulas="75" height.aulas="75"
+				 x.desktop="11.5" y.desktop="9.65" width.desktop="75" height.desktop="75"
+				 horizontalCenter.professorDesktop="4"
+				 source.professorDesktop="imagens/icones/professor.png"
+				 verticalCenter.professorDesktop="-19"/>
 		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
 				 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
-				 verticalAlign="middle"/>
+				 verticalAlign="middle"
+				 x.professorDesktop="-0.1" width.professorDesktop="100"
+				 text.professorDesktop="PROFESSOR"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="login" x="305" y="10.35" width="200" height="190" borderVisible="false"
 					   cornerRadius="50">
-		<s:Image includeIn="login" x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
+		<s:Image x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
 	</s:BorderContainer>
+	<s:TitleWindow id="avasTelaErro" includeIn="erro" x="206" y="137" width="380" height="211"
+				   title="AVAS">
+		<s:Image left="9" top="6" source="imagens/icones/error.png"/>
+		<s:BorderContainer id="detalhes" left="0" right="0" bottom="0" height="67"
+						   backgroundColor="#EDEDED" borderVisible="false" color="#777777">
+			<s:TextArea id="detalhesErro" left="10" right="10" top="10" bottom="10"
+						borderVisible="false" contentBackgroundAlpha="0.0"
+						text="Texto com possível explicação do erro descrito acima"/>
+		</s:BorderContainer>
+		<s:Button id="btnFechar" right="10" bottom="75" label="Fechar"
+				  click="button1_clickHandler(event)"/>
+		<s:Label id="titulo" y="16" left="50" right="52" color="#51659E" fontWeight="bold"
+				 horizontalCenter="-1" text="A senha deve conter no mínimo 4 caracteres."/>
+		<mx:LinkButton id="btnDetalhes" left="10" bottom="75" label="Detalhes"
+					   click="linkbutton1_clickHandler(event)" textDecoration="underline"/>
+		<s:TextArea id="msgErro" left="11" right="9" top="41" bottom="96" borderVisible="false"
+					contentBackgroundAlpha="0.0" text="Tente digitar sua senha novamente antes de continuar"/>
+	</s:TitleWindow>
 </s:Application>
