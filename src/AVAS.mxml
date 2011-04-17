@@ -103,7 +103,7 @@
 				 text="esqueci minha senha" textDecoration="underline"/>
 		<s:Image includeIn="login" right="6" top="5" width="28" height="28"
 				 source="imagens/icones/Help.png"/>
-		<s:BorderContainer includeIn="desktop" x="110.35" y="195.4" width="570" height="260"
+		<s:BorderContainer includeIn="desktop" x="97.35" y="195.4" width="570" height="260"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false">
 			<mx:DateChooser left="10" bottom="10" width="271" height="202"
@@ -117,9 +117,22 @@
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
+		<mx:VRule x="389" y="22" width="26"
+				  x.desktop="378" y.desktop="503" width.desktop="27" height.desktop="77"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktop" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
+		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"/>
+		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"/>
+		<s:Button x="139" y="11" width="116" height="57" label="          Atividades" cornerRadius="7"/>
+		<s:Button x="406" y="11" width="116" height="57" label="        Chat" cornerRadius="7"/>
+		<s:Image x="413" y="23" source="imagens/icones/chat.png"/>
+		<s:Image x="146" y="25" source="imagens/icones/atividades.png"/>
+		<s:Button x="527" y="11" width="116" height="57" label="          Fórum" cornerRadius="7"/>
+		<s:Image x="536" y="25" source="imagens/icones/forum.png"/>
+		<s:Button includeIn="desktop" x="261" y="11" width="116" height="57" label="          Vídeo Aulas"
+				  cornerRadius="7"/>
+		<s:Image includeIn="desktop" x="267" y="25" source="imagens/icones/videoaula.png"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktop" x="170" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
