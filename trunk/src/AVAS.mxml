@@ -76,7 +76,8 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"/>
+	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"
+			 x.login="0" y.login="0"/>
 	<s:BorderContainer width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
 					   cornerRadius="20"
 					   x.desktop="10" y.desktop="10"
@@ -92,16 +93,16 @@
 					 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
 					 verticalAlign="middle"/>
 		</s:BorderContainer>
-		<s:Button includeIn="login" right="10" top="142" label="Entrar" click="onEntrar(event)"/>
+		<s:Button includeIn="login" right="10" bottom="16" label="Entrar" click="onEntrar(event)"/>
 		<s:TextInput id="login" includeIn="login" left="10" right="10" top="61"/>
-		<s:TextInput id="senha" includeIn="login" left="10" right="10" top="105"/>
+		<s:TextInput id="senha" includeIn="login" left="10" top="105" width="228"/>
 		<s:Label includeIn="login" x="10" y="47" color="#000000" fontWeight="bold" text="Usuário"/>
 		<s:Label includeIn="login" x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19"
 				 fontWeight="bold" text="Acessar o AVAS"/>
 		<s:Label includeIn="login" x="10" y="91" color="#000000" fontWeight="bold" text="Senha"/>
 		<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
 				 text="esqueci minha senha" textDecoration="underline"/>
-		<s:Image includeIn="login" right="6" top="5" width="28" height="28"
+		<s:Image includeIn="login" right="7" top="7" width="28" height="28"
 				 source="imagens/icones/Help.png"/>
 		<s:BorderContainer includeIn="desktop" x="97.35" y="195.4" width="570" height="260"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
@@ -117,8 +118,7 @@
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
-		<mx:VRule x="389" y="22" width="26"
-				  x.desktop="378" y.desktop="503" width.desktop="27" height.desktop="77"/>
+		<mx:VRule includeIn="desktop" x="378" y="503" width="27" height="77"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktop" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
