@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.FlexEvent;
 			
 			protected function onInit(event:FlexEvent):void {
@@ -59,6 +60,11 @@
 				return true;
 			}
 
+
+			protected function onSelecionaData(event:CalendarLayoutChangeEvent):void {
+				// TODO Auto-generated method stub
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -96,6 +102,20 @@
 				 text="esqueci minha senha" textDecoration="underline"/>
 		<s:Image includeIn="login" right="6" top="5" width="28" height="28"
 				 source="imagens/icones/Help.png"/>
+		<s:BorderContainer includeIn="desktop" x="110.35" y="195.4" width="570" height="260"
+						   borderVisible="false" buttonMode="true" cornerRadius="10"
+						   dropShadowVisible="false">
+			<mx:DateChooser left="10" bottom="10" width="271" height="202"
+							change="onSelecionaData(event)"/>
+			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
+					 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
+					 verticalAlign="justify"/>
+			<s:Label x="301.35" y="26" width="260" height="18" fontSize="15" fontWeight="normal"
+					 text="Atividades deste mês" textAlign="center"
+					 verticalAlign="justify"/>
+			<s:List x="304" y="48" width="255" height="202"></s:List>
+			<mx:VRule x="290" y="10" height="240"/>
+		</s:BorderContainer>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktop" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
