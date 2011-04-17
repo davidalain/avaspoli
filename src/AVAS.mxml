@@ -75,6 +75,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	
 	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"/>
 	<s:BorderContainer width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
 					   cornerRadius="20"
