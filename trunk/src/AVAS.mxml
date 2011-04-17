@@ -9,8 +9,10 @@
 			
 
 	<fx:Script>
-		<![CDATA[
+		<![CDATA[			
 			import mx.controls.Alert;
+			import mx.effects.easing.Back;
+			import mx.effects.easing.Linear;
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.FlexEvent;
 			
@@ -23,7 +25,7 @@
 			protected function onEntrar(event:MouseEvent):void {
 				// TODO Auto-generated method stub
 				if (this.validarLogin ()) {
-					this.currentState = "desktop";
+					this.currentState = "desktopAluno";
 				}
 			}
 			
@@ -31,8 +33,7 @@
 				if (this.login.text == "") {
 					this.login.setStyle("borderColor", 0xFF0000);
 					this.login.setStyle("color", 0xFF0000);
-					this.currentState = "erro";
-					//Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
+					this.currentState = "erro"; //Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
 					return false;
 				} else {
 					this.login.setStyle("borderColor", 0x000000);
@@ -67,6 +68,18 @@
 			protected function onSelecionaData(event:CalendarLayoutChangeEvent):void {
 				// TODO Auto-generated method stub
 			}
+			
+			protected function onEsqueci(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				this.currentState = "loginEsqueci";
+			}
+			
+			
+			protected function onRecuperar(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				this.currentState = "login";
+				Alert.show("E-mail enviado com sucesso.\nVerifique seu e-mail e\nsiga as instruções.", "Informação");
+			}
 
 
 			protected function linkbutton1_clickHandler(event:MouseEvent):void
@@ -95,51 +108,48 @@
 	</fx:Script>
 	<s:states>
 		<s:State name="login"/>
-		<s:State name="desktop"/>
-		<s:State name="professorDesktop"/>
+		<s:State name="loginEsqueci"/>		
+		<s:State name="desktopAluno"/>
+		<s:State name="desktopProf"/>
 		<s:State name="aulas"/>
 		<s:State name="erro"/>
-	</s:states>
+	</s:states>	
+	
+	<!-- Define the transition to animate the change of view state. -->
+	<s:transitions>
+		<mx:Transition>
+			<s:Sequence 
+				targets="{[loginBg]}">
+				<mx:Resize duration="250" easingFunction="Back.easeOut"/>
+				
+			</s:Sequence>
+		</mx:Transition>
+	</s:transitions>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:Image includeIn="aulas,desktop,login,professorDesktop" x="0" y="0" width="800" height="600"
-			 scaleMode="stretch" source="imagens/wallpaper2.png"
+	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"
 			 x.login="0" y.login="0"/>
-	<s:BorderContainer includeIn="aulas,desktop,login,professorDesktop" width="780" height="495"
+	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" width="780" height="495"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20"
 					   x.aulas="10" y.aulas="10"
-					   x.desktop="10" y.desktop="10"
-					   x.login="281" y.login="221" width.login="248" height.login="179"
-					   backgroundAlpha.login="0.5"
-					   x.professorDesktop="10" y.professorDesktop="10">
-		<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="30" y="30" width="100" height="120"
+					   x.desktopAluno="10" y.desktopAluno="10"
+					   x.desktopProf="10" y.desktopProf="10">
+		<s:BorderContainer includeIn="desktopAluno" x="30" y="30" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false" rollOverColor="#3882F1"
 						   toolTip="Vídeos Relacionados">
 			<s:Image x="11.5" y="9.65" width="75" height="75"
 					 source="imagens/icones/Youtube_128x128.png"/>
-			<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
+			<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="13"
 					 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
 					 verticalAlign="middle"/>
 		</s:BorderContainer>
-		<s:Button includeIn="login" right="10" bottom="16" label="Entrar" click="onEntrar(event)"/>
-		<s:TextInput id="login" includeIn="login" left="10" right="10" top="61"/>
-		<s:TextInput id="senha" includeIn="login" left="10" top="105" width="228"/>
-		<s:Label includeIn="login" x="10" y="47" color="#000000" fontWeight="bold" text="Usuário"/>
-		<s:Label includeIn="login" x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19"
-				 fontWeight="bold" text="Acessar o AVAS"/>
-		<s:Label includeIn="login" x="10" y="91" color="#000000" fontWeight="bold" text="Senha"/>
-		<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
-				 text="esqueci minha senha" textDecoration="underline"/>
-		<s:Image includeIn="login" right="7" top="7" width="28" height="28"
-				 source="imagens/icones/Help.png"/>
-		<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="97.35" y="195.4" width="570" height="260"
-						   borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false">
-			<mx:DateChooser includeIn="desktop,professorDesktop" left="10" bottom="10" width="271"
+		<s:BorderContainer x="97.35" y="195.4" width="570" height="260" borderVisible="false"
+						   buttonMode="true" cornerRadius="10" dropShadowVisible="false">
+			<mx:DateChooser includeIn="desktopAluno,desktopProf" left="10" bottom="10" width="271"
 							height="202" change="onSelecionaData(event)"/>
 			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
 					 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
@@ -151,9 +161,9 @@
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
-		<mx:VRule includeIn="aulas,desktop,professorDesktop" x="378" y="503" width="27" height="77"/>
+		<mx:VRule x="378" y="503" width="27" height="77"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="10" y="513" width="780" height="77"
+	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
 		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"/>
 		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"/>
@@ -167,31 +177,32 @@
 				  cornerRadius="7"/>
 		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="170" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="desktopAluno" x="170" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Twitter do Curso">
 		<s:Image x="11.5" y="9.65" width="75" height="75"
 				 source="imagens/icones/Twitter_128x128.png"/>
-		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
+		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="13"
 				 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
 				 verticalAlign="middle"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="aulas,desktop,professorDesktop" x="660" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" x="660" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Informações e Configurações do Aluno">
 		<s:Image source="imagens/icones/aluno.png"
 				 x.aulas="11.5" y.aulas="9.65" width.aulas="75" height.aulas="75"
-				 x.desktop="11.5" y.desktop="9.65" width.desktop="75" height.desktop="75"
-				 horizontalCenter.professorDesktop="4"
-				 source.professorDesktop="imagens/icones/professor.png"
-				 verticalCenter.professorDesktop="-19"/>
+				 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75" height.desktopAluno="75"
+				 horizontalCenter.desktopProf="4"
+				 source.desktopProf="imagens/icones/professor.png"
+				 verticalCenter.desktopProf="-19"/>
 		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
 				 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
 				 verticalAlign="middle"
-				 x.professorDesktop="-0.1" width.professorDesktop="100"
-				 text.professorDesktop="PROFESSOR"/>
+				 fontSize.desktopAluno="13"
+				 x.desktopProf="-0.1" width.desktopProf="100" fontSize.desktopProf="13"
+				 text.desktopProf="PROFESSOR"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="login" x="305" y="10.35" width="200" height="190" borderVisible="false"
+	<s:BorderContainer includeIn="login,loginEsqueci" x="305" y="10.35" width="200" height="190" borderVisible="false"
 					   cornerRadius="50">
 		<s:Image x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
 	</s:BorderContainer>
@@ -213,4 +224,35 @@
 		<s:TextArea id="msgErro" left="11" right="9" top="41" bottom="96" borderVisible="false"
 					contentBackgroundAlpha="0.0" text="Tente digitar sua senha novamente antes de continuar"/>
 	</s:TitleWindow>
+	<s:BorderContainer id="loginBg" includeIn="login,loginEsqueci" borderVisible="false"
+					   x.login="281" y.login="221" width.login="248" height.login="179"
+					   backgroundAlpha.login="0.5" cornerRadius.login="10"
+					   x.loginEsqueci="281" y.loginEsqueci="221" width.loginEsqueci="248"
+					   height.loginEsqueci="240" backgroundAlpha.loginEsqueci="0.5"
+					   cornerRadius.loginEsqueci="10">
+		<s:Button includeIn="login" right="10" top="142" label="Entrar" click="onEntrar(event)"/>
+		<s:TextInput id="login" left="61" top="61" width="177"
+					 enabled.loginEsqueci="false"/>
+		<s:TextInput id="senha" left="61" top="91" width="177"
+					 enabled.loginEsqueci="false"/>
+		<s:TextInput id="email" includeIn="loginEsqueci" left="61" top="177" width="177"/>
+		<s:Label id="lblEmail" includeIn="loginEsqueci" x="10" y="183" width="45" color="#000000"
+				 fontWeight="bold" text="E-mail" textAlign="right"/>
+		<s:Label x="10" y="67" color="#000000" fontWeight="bold" text="Usuário"/>
+		<s:Label x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19" fontWeight="bold"
+				 text="Acessar o AVAS"
+				 width.login="228" textAlign.login="center" verticalAlign.login="middle"
+				 y.loginEsqueci="10" width.loginEsqueci="228" height.loginEsqueci="21"
+				 textAlign.loginEsqueci="center" verticalAlign.loginEsqueci="bottom"/>
+		<s:Label x="10" y="98" width="45" color="#000000" fontWeight="bold" text="Senha"
+				 textAlign="right"/>
+		<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
+				 text="esqueci minha senha" textDecoration="underline" click="onEsqueci(event)" 
+				 buttonMode="true"/>
+		<s:RichText id="infoEsqueci" includeIn="loginEsqueci" x="10" y="125" width="228" height="46"
+					fontSize="10"
+					text="Se deseja recuperar os dados de acesso a sua conta, preencha o campo e-mail e clique no botão abaixo para receber informações de como proceder."/>
+		<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
+				  label="Recuperar" click="onRecuperar(event)"/>
+	</s:BorderContainer>
 </s:Application>
