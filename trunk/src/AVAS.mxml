@@ -35,6 +35,9 @@
 					this.currentState = "erro"; //Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
 					return false;
 				} else {
+					if(this.login.text.length<4){
+						this.balao1.visible = this.balao2.visible = this.balao3.visible = true;
+					}
 					this.login.setStyle("borderColor", 0x000000);
 					this.login.setStyle("color", 0x000000);
 				}
@@ -275,16 +278,16 @@
 						   backgroundColor="#EDEDED" borderVisible="false" color="#777777">
 			<s:TextArea id="detalhesErro" left="10" right="10" top="10" bottom="10"
 						borderVisible="false" contentBackgroundAlpha="0.0"
-						text="Texto com possível explicação do erro descrito acima"/>
+						text="- O usuário não existe ou a senha não está correta"/>
 		</s:BorderContainer>
 		<s:Button id="btnFechar" right="10" bottom="75" label="Fechar"
 				  click="button1_clickHandler(event)"/>
 		<s:Label id="titulo" y="16" left="50" right="52" color="#51659E" fontWeight="bold"
-				 horizontalCenter="-1" text="A senha deve conter no mínimo 4 caracteres."/>
+				 horizontalCenter="-1" text="Usuário ou senha inválido(s)"/>
 		<mx:LinkButton id="btnDetalhes" left="10" bottom="75" label="Detalhes"
 					   click="linkbutton1_clickHandler(event)" textDecoration="underline"/>
 		<s:TextArea id="msgErro" left="11" right="9" top="41" bottom="96" borderVisible="false"
-					contentBackgroundAlpha="0.0" text="Tente digitar sua senha novamente antes de continuar"/>
+					contentBackgroundAlpha="0.0" text="Por favor, digite suas credenciais novamente."/>
 	</s:TitleWindow>
 	<s:BorderContainer id="loginBg" includeIn="login,loginEsqueci" borderVisible="false"
 					   x.login="281" y.login="221" width.login="248" height.login="179"
@@ -317,4 +320,9 @@
 		<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
 				  label="Recuperar" click="onRecuperar(event)"/>
 	</s:BorderContainer>
+	<s:Image id="balao1" visible="false" includeIn="login" x="518" y="232" width="258" height="73"
+			 source="imagens/icones/balao.png"/>
+	<s:Image id="balao2" visible="false" includeIn="login" x="537" y="249" source="imagens/icones/warning.png"/>
+	<s:TextArea id="balao3" visible="false" includeIn="login" x="576" y="246" height="36" borderVisible="false"
+				contentBackgroundAlpha="0.0" text="O nome de usuário deve ter ao menos 4 caracteres"/>
 </s:Application>
