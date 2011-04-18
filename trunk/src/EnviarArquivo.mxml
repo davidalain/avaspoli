@@ -56,12 +56,13 @@
 					   x.uploading="0" y.uploading="0">
 		<s:RichText id="migalhaFade" includeIn="selecionarTipo" left="10" right="10" top="10"
 					height="24" color="#BEB7B7" fontSize="16"
-					text="selecionar tipo &gt; buscar aquivo &gt; enviando &gt; fim do envio"
+					text="selecionar tipo &gt; buscar arquivo &gt; enviando &gt; fim do envio"
 					textDecoration="underline" verticalAlign="middle"/>
 		<s:RichText id="migalha" left="10" right="10" top="10" height="24" fontSize="18"
 					textDecoration="underline" verticalAlign="middle"
 					fontSize.buscarImagem="16"
 					text.buscarImagem="selecionar tipo &gt; buscar arquivo"
+					left.selecionarTipo="10" right.selecionarTipo="10" top.selecionarTipo="10"
 					fontSize.selecionarTipo="16" text.selecionarTipo="selecionar tipo"
 					fontSize.sucesso="16"
 					text.sucesso="selecionar tipo &gt; buscar arquivo &gt; enviando &gt; fim do envio"
@@ -89,10 +90,12 @@
 				 verticalAlign="top"/>
 		<s:Label includeIn="selecionarTipo" x="327" y="232" width="128" height="18" fontSize="13"
 				 text="Documentos (doc)" textAlign="center" verticalAlign="top"/>
-		<s:TextInput includeIn="buscarImagem" x="86" y="271" width="191"
+		<s:TextInput includeIn="buscarImagem" x="38" y="271" width="219"
 					 text="C:\Documentos\Aula2.jpg"/>
-		<s:Button includeIn="buscarImagem" x="286" y="271" width="106" label="Buscar Arquivo"
+		<s:Button includeIn="buscarImagem" x="263" y="271" width="106" label="Buscar Arquivo"
 				  click="onUploadImage(event)"/>
+		<s:Button includeIn="buscarImagem" x="375" y="271" label="Enviar"/>
+		<mx:ProgressBar includeIn="uploading" x="44" y="259" width="380"/>
 		<ns1:Loading includeIn="uploading" x="133" y="281"/>
 		<s:RichText includeIn="sucesso" x="37" y="107" width="411" height="13" fontSize="14"
 					text="Arquivo enviado com sucesso. "/>
