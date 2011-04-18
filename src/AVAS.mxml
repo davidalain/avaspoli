@@ -3,8 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:ns1="*"
-			   minWidth="800" minHeight="600"
-			   creationComplete="onInit(event)"> 
+			   minWidth="800" minHeight="600" creationComplete="onInit(event)" currentState="login"> 
 				<!-- método de inicialização -->
 			
 
@@ -25,7 +24,7 @@
 			protected function onEntrar(event:MouseEvent):void {
 				// TODO Auto-generated method stub
 				if (this.validarLogin ()) {
-					this.currentState = "desktopAluno";
+					this.currentState = "desktopAluno";					
 				}
 			}
 			
@@ -104,6 +103,36 @@
 				//voltar para a tela anterior onde o erro aconteceu
 			}
 
+
+			protected function btAulas_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "aulas";
+			}
+
+
+			protected function btAtividades_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "atividadesAluno";
+			}
+
+
+			protected function btVideoAulas_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "videoaulasAluno";
+			}
+
+
+			protected function btChat_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "chatAluno";
+			}
+
+
+			protected function btForum_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "forumAluno";
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -111,8 +140,12 @@
 		<s:State name="loginEsqueci"/>		
 		<s:State name="desktopAluno"/>
 		<s:State name="desktopProf"/>
-		<s:State name="aulas"/>
+		<s:State name="aulasAluno"/>
 		<s:State name="erro"/>
+		<s:State name="atividadesAluno"/>
+		<s:State name="videoaulasAluno"/>
+		<s:State name="forumAluno"/>
+		<s:State name="chatAluno"/>
 	</s:states>	
 	
 	<!-- Define the transition to animate the change of view state. -->
@@ -132,11 +165,16 @@
 	
 	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"
 			 x.login="0" y.login="0"/>
-	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" width="780" height="495"
-					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20"
-					   x.aulas="10" y.aulas="10"
+	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno"
+					   width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
+					   cornerRadius="20"
+					   x.atividadesAluno="10" y.atividadesAluno="10"
+					   x.aulasAluno="10" y.aulasAluno="10"
+					   x.chatAluno="10" y.chatAluno="10"
 					   x.desktopAluno="10" y.desktopAluno="10"
-					   x.desktopProf="10" y.desktopProf="10">
+					   x.desktopProf="10" y.desktopProf="10"
+					   x.forumAluno="10" y.forumAluno="10"
+					   x.videoaulasAluno="10" y.videoaulasAluno="10">
 		<s:BorderContainer includeIn="desktopAluno,desktopProf" x="30" y="30" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false" rollOverColor="#3882F1"
@@ -147,34 +185,50 @@
 					 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
 					 verticalAlign="middle"/>
 		</s:BorderContainer>
-		<s:BorderContainer x="97.35" y="195.4" width="570" height="260" borderVisible="false"
-						   buttonMode="true" cornerRadius="10" dropShadowVisible="false">
-			<mx:DateChooser includeIn="desktopAluno,desktopProf" left="10" bottom="10" width="271"
+		<s:BorderContainer includeIn="atividadesAluno,chatAluno,desktopAluno" x="97.35" y="195.4" width="570"
+						   height="260" borderVisible="false" buttonMode="true" cornerRadius="10"
+						   dropShadowVisible="false">
+			<mx:DateChooser includeIn="desktopAluno" left="10" bottom="10" width="271"
 							height="202" change="onSelecionaData(event)"/>
 			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
 					 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
 					 verticalAlign="justify"
-					 text.aulas="Arquivos de aulas"/>
+					 text.atividadesAluno="Atividades"
+					 text.aulasAluno="Arquivos de aulas"
+					 text.chatAluno="Chat"
+					 text.forumAluno="Arquivos de aulas"
+					 text.videoaulasAluno="Arquivos de aulas"/>
 			<s:Label x="301.35" y="26" width="260" height="18" fontSize="15" fontWeight="normal"
 					 text="Atividades deste mês" textAlign="center" verticalAlign="justify"
-					 text.aulas="Arquivos complementares"/>
+					 text.atividadesAluno="Arquivos complementares"
+					 text.aulasAluno="Arquivos complementares"
+					 text.chatAluno="Arquivos complementares"
+					 text.forumAluno="Arquivos complementares"
+					 text.videoaulasAluno="Arquivos complementares"/>
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
 		<mx:VRule x="378" y="503" width="27" height="77"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" x="10" y="513" width="780" height="77"
+	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
-		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"/>
+		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"
+				  label.desktopAluno="        Aulas"
+				  click.desktopAluno="btAulas_clickHandler(event)"/>
 		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"/>
-		<s:Button x="139" y="11" width="116" height="57" label="          Atividades" cornerRadius="7"/>
-		<s:Button x="406" y="11" width="116" height="57" label="        Chat" cornerRadius="7"/>
+		<s:Button x="139" y="11" width="116" height="57" label="          Atividades"
+				  cornerRadius="7"
+				  click.desktopAluno="btAtividades_clickHandler(event)"/>
+		<s:Button x="406" y="11" width="116" height="57" label="        Chat" cornerRadius="7"
+				  click.desktopAluno="btChat_clickHandler(event)"/>
 		<s:Image x="413" y="23" source="imagens/icones/chat.png"/>
 		<s:Image x="146" y="25" source="imagens/icones/atividades.png"/>
-		<s:Button x="527" y="11" width="116" height="57" label="          Fórum" cornerRadius="7"/>
+		<s:Button x="527" y="11" width="116" height="57" label="          Fórum" cornerRadius="7"
+				  click.desktopAluno="btForum_clickHandler(event)"/>
 		<s:Image x="536" y="25" source="imagens/icones/forum.png"/>
 		<s:Button x="261" y="11" width="116" height="57" label="          Vídeo Aulas"
-				  cornerRadius="7"/>
+				  cornerRadius="7"
+				  click.desktopAluno="btVideoAulas_clickHandler(event)"/>
 		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktopAluno,desktopProf" x="170" y="40" width="100" height="120"
@@ -186,15 +240,23 @@
 				 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
 				 verticalAlign="middle"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="aulas,desktopAluno,desktopProf" x="660" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno" x="660" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Informações e Configurações do Aluno">
 		<s:Image source="imagens/icones/aluno.png"
-				 x.aulas="11.5" y.aulas="9.65" width.aulas="75" height.aulas="75"
-				 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75" height.desktopAluno="75"
-				 horizontalCenter.desktopProf="4"
-				 source.desktopProf="imagens/icones/professor.png"
-				 verticalCenter.desktopProf="-19"/>
+				 x.atividadesAluno="11.5" y.atividadesAluno="9.65" width.atividadesAluno="75"
+				 height.atividadesAluno="75"
+				 x.aulasAluno="11.5" y.aulasAluno="9.65" width.aulasAluno="75"
+				 height.aulasAluno="75"
+				 x.chatAluno="11.5" y.chatAluno="9.65" width.chatAluno="75" height.chatAluno="75"
+				 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75"
+				 height.desktopAluno="75"
+				 horizontalCenter.desktopProf="4" source.desktopProf="imagens/icones/professor.png"
+				 verticalCenter.desktopProf="-19"
+				 x.forumAluno="11.5" y.forumAluno="9.65" width.forumAluno="75"
+				 height.forumAluno="75"
+				 x.videoaulasAluno="11.5" y.videoaulasAluno="9.65" width.videoaulasAluno="75"
+				 height.videoaulasAluno="75"/>
 		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
 				 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
 				 verticalAlign="middle"
