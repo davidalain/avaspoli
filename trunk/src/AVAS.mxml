@@ -3,7 +3,8 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:ns1="*"
-			   minWidth="800" minHeight="600" creationComplete="onInit(event)" currentState="login"> 
+			   minWidth="800" minHeight="600" creationComplete="onInit(event)" 
+			   currentState="login"> 
 				<!-- método de inicialização -->
 			
 
@@ -14,6 +15,9 @@
 			import mx.effects.easing.Linear;
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			private var desktop:String;
 			
 			protected function onInit(event:FlexEvent):void {
 				// TODO Auto-generated method stub
@@ -24,15 +28,33 @@
 			protected function onEntrar(event:MouseEvent):void {
 				// TODO Auto-generated method stub
 				if (this.validarLogin ()) {
-					this.currentState = "desktopAluno";					
+					if (this.login.text == "prof") {
+						this.currentState = "desktopProf";
+					} else {
+						this.currentState = "desktopAluno";
+					}	
+					this.desktop = this.currentState;				
 				}
 			}
 			
+			private function mostrarMsg (msg:String, titulo:String = "Mensagem", detalhe:String = "*Não há detalhes para esta mensagem."):void {				
+				var mensagem:Mensagem = Mensagem(PopUpManager.createPopUp( this, Mensagem , true));
+				mensagem.msg = msg;
+				mensagem.detalhe = detalhe;
+				mensagem.titulo = titulo;
+				mensagem.x = (this.stage.stageWidth - mensagem.width) / 2;
+				mensagem.y = (this.stage.stageHeight - mensagem.height) / 2;
+			}
+			
 			private function validarLogin ():Boolean {
+				if (this.login.text == "prof" && this.senha.text == "123" ) {	
+					return true;
+				}
 				if (this.login.text == "") {
 					this.login.setStyle("borderColor", 0xFF0000);
 					this.login.setStyle("color", 0xFF0000);
-					this.currentState = "erro"; //Alert.show("O campo 'Usuário' não pode ser vazio.", "Atenção: Campo Vazio");
+					//this.currentState = "erro"; 
+					this.mostrarMsg ("O campo Usuário deve ser preenchido para efetuar entrar no sistema.", "Atenção: Campo Vazio", "Os campos de usuário e senha são obrigatórios.");
 					return false;
 				} else {
 					if(this.login.text.length<4){
@@ -41,26 +63,30 @@
 					this.login.setStyle("borderColor", 0x000000);
 					this.login.setStyle("color", 0x000000);
 				}
+				
 				if (this.senha.text == "") {
 					this.senha.setStyle("borderColor", 0xFF0000);
 					this.senha.setStyle("color", 0xFF0000);
-					Alert.show("O campo 'Senha' não pode ser vazio.", "Atenção: Campo Vazio");
+					this.mostrarMsg ("O campo 'Senha' não pode ser vazio.", "Atenção: Campo Vazio",  "Os campos de usuário e senha são obrigatórios.");
+					
 					return false;
 				} else {
-					this.login.setStyle("borderColor", 0x000000);
-					this.login.setStyle("color", 0x000000);
+					this.senha.setStyle("borderColor", 0x000000);
+					this.senha.setStyle("color", 0x000000);
 				}
-					
+				
 				if (this.login.text != "aluno" || this.senha.text != "123" ) {					
 					this.login.setStyle("borderColor", 0xFF0000);
 					this.login.setStyle("color", 0xFF0000);
 					this.senha.setStyle("borderColor", 0xFF0000);
-					this.senha.setStyle("color", 0xFF0000);
-					Alert.show("Usuário ou Senha inválidos.\nClique em 'esqueci minha senha'\npara saber como proceder\ncaso tenha esquecido seu usuário\nou senha.", "Atenção: Dados não Conferem");
+					this.senha.setStyle("color", 0xFF0000);					
+					this.mostrarMsg ("Usuário ou Senha inválidos.", "Atenção: Dados não Conferem"," Clique em 'esqueci minha senha' para saber como proceder caso tenha esquecido seu usuário ou senha.");
 					return false;
 				} else {
 					this.login.setStyle("borderColor", 0x000000);
 					this.login.setStyle("color", 0x000000);
+					this.senha.setStyle("borderColor", 0x000000);
+					this.senha.setStyle("color", 0x000000);
 				}
 				
 				return true;
@@ -80,11 +106,11 @@
 			protected function onRecuperar(event:MouseEvent):void {
 				// TODO Auto-generated method stub
 				this.currentState = "login";
-				Alert.show("E-mail enviado com sucesso.\nVerifique seu e-mail e\nsiga as instruções.", "Informação");
+				this.mostrarMsg ("E-mail enviado com sucesso. Verifique seu e-mail e siga as instruções.", "Informação");
 			}
 
 
-			protected function linkbutton1_clickHandler(event:MouseEvent):void
+		/* 	protected function linkbutton1_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				if(this.detalhes.visible){
@@ -99,12 +125,12 @@
 				this.detalhes.visible = !this.detalhes.visible;
 			}
 
-
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				//voltar para a tela anterior onde o erro aconteceu
 			}
+			*/
 
 
 			protected function btAulas_clickHandler(event:MouseEvent):void
@@ -122,6 +148,9 @@
 			protected function btVideoAulas_clickHandler(event:MouseEvent):void
 			{
 				this.currentState = "videoaulasAluno";
+				if (playerTube != null) {
+					playerTube.search("flashcampbrasil");
+				}
 			}
 
 
@@ -136,6 +165,30 @@
 				this.currentState = "forumAluno";
 			}
 
+			
+			protected function onHome(event:MouseEvent):void
+			{
+				if (playerTube != null) {
+					playerTube.stop();
+				}
+				this.currentState = this.desktop;
+			}
+			
+			protected function onYoutube(event:MouseEvent):void
+			{
+				this.currentState = "youtube";
+				if (playerTube != null) {
+					playerTube.search();
+				}
+			}
+
+
+			protected function btAulasProf(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "aulasProf";
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -144,11 +197,12 @@
 		<s:State name="desktopAluno"/>
 		<s:State name="desktopProf"/>
 		<s:State name="aulasAluno"/>
-		<s:State name="erro"/>
 		<s:State name="atividadesAluno"/>
 		<s:State name="videoaulasAluno"/>
 		<s:State name="forumAluno"/>
 		<s:State name="chatAluno"/>
+		<s:State name="youtube"/>
+		<s:State name="aulasProf"/>
 	</s:states>	
 	
 	<!-- Define the transition to animate the change of view state. -->
@@ -165,216 +219,168 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	
-	<s:Image x="0" y="0" width="800" height="600" scaleMode="stretch" source="imagens/wallpaper2.png"
-			 x.login="0" y.login="0"/>
-	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno"
-					   width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
-					   cornerRadius="20"
-					   x.atividadesAluno="10" y.atividadesAluno="10"
-					   x.aulasAluno="10" y.aulasAluno="10"
-					   x.chatAluno="10" y.chatAluno="10"
-					   x.desktopAluno="10" y.desktopAluno="10"
-					   x.desktopProf="10" y.desktopProf="10"
-					   x.forumAluno="10" y.forumAluno="10"
-					   x.videoaulasAluno="10" y.videoaulasAluno="10">
-		<s:BorderContainer includeIn="desktopAluno,desktopProf" x="30" y="30" width="100" height="120"
+	<s:Image scaleMode="stretch" source="imagens/wallpaper2.png"
+			 x.atividadesAluno="0" y.atividadesAluno="0" width.atividadesAluno="800"
+			 height.atividadesAluno="600"
+			 left.aulasAluno="0" right.aulasAluno="0" top.aulasAluno="0" bottom.aulasAluno="0"
+			 left.aulasProf="0" right.aulasProf="0" top.aulasProf="0" bottom.aulasProf="0"
+			 x.chatAluno="0" y.chatAluno="0" width.chatAluno="800" height.chatAluno="600"
+			 x.desktopAluno="0" y.desktopAluno="0" width.desktopAluno="800"
+			 height.desktopAluno="600"
+			 x.desktopProf="0" y.desktopProf="0" width.desktopProf="800" height.desktopProf="600"
+			 x.forumAluno="0" y.forumAluno="0" width.forumAluno="800" height.forumAluno="600"
+			 x.login="0" y.login="0" width.login="800" height.login="600"
+			 x.loginEsqueci="0" y.loginEsqueci="0" width.loginEsqueci="800"
+			 height.loginEsqueci="600"
+			 x.videoaulasAluno="0" y.videoaulasAluno="0" width.videoaulasAluno="800"
+			 height.videoaulasAluno="600"
+			 left.youtube="0" right.youtube="0" top.youtube="0" bottom.youtube="0"/>
+		<s:BorderContainer includeIn="atividadesAluno,aulasAluno,aulasProf,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno,youtube"
+						   width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
+						   cornerRadius="20"
+						   x.atividadesAluno="10" y.atividadesAluno="10"
+						   x.aulasAluno="10" y.aulasAluno="10"
+						   x.aulasProf="10" y.aulasProf="10"
+						   x.chatAluno="10" y.chatAluno="10"
+						   x.desktopAluno="10" y.desktopAluno="10"
+						   x.desktopProf="10" y.desktopProf="10"
+						   x.forumAluno="10" y.forumAluno="10"
+						   x.videoaulasAluno="10" y.videoaulasAluno="10"
+						   x.youtube="10" y.youtube="10">
+			<s:BorderContainer includeIn="desktopAluno,desktopProf" x="30" y="30" width="100" height="120"
+							   borderVisible="false" buttonMode="true" cornerRadius="10"
+							   dropShadowVisible="false" rollOverColor="#3882F1"
+							   toolTip="Vídeos Relacionados" click="onYoutube(event)">
+				<s:Image x="11.5" y="9.65" width="75" height="75"
+						 source="imagens/icones/Youtube_128x128.png"/>
+				<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="13"
+						 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
+						 verticalAlign="middle"/>
+			</s:BorderContainer>
+			<s:BorderContainer includeIn="atividadesAluno,chatAluno,desktopAluno" x="97.35" y="195.4" width="570"
+							   height="260" borderVisible="false" buttonMode="true" cornerRadius="10"
+							   dropShadowVisible="false">
+				<mx:DateChooser includeIn="desktopAluno" left="10" bottom="10" width="271"
+								height="202" change="onSelecionaData(event)"/>
+				<s:Label left="10" bottom="215" width="271" height="18" fontSize="15"
+						 fontWeight="normal" text="Calendário de Atividades e Vídeo Aulas"
+						 textAlign="center" verticalAlign="justify"
+						 text.atividadesAluno="Atividades"
+						 text.chatAluno="Chat"/>
+				<s:Label x="301.35" y="26" width="260" height="18" fontSize="15" fontWeight="normal"
+						 text="Atividades deste mês" textAlign="center" verticalAlign="justify"
+						 text.atividadesAluno="Arquivos complementares"
+						 text.chatAluno="Arquivos complementares"/>
+				<s:List x="304" y="48" width="255" height="202"></s:List>
+				<mx:VRule x="290" y="10" height="240"/>
+			</s:BorderContainer>
+			
+			<ns1:Youtube id="playerTube" includeIn="videoaulasAluno,youtube" x="10.2" y="16.75" width="760"
+						 height="457">
+			</ns1:Youtube>
+			<ns1:EnviarArquivo includeIn="aulasProf" x="150.55" y="90.7">
+			</ns1:EnviarArquivo>
+		</s:BorderContainer>
+		<s:BorderContainer includeIn="desktopAluno,desktopProf" x="170" y="40" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false" rollOverColor="#3882F1"
-						   toolTip="Vídeos Relacionados">
+						   dropShadowVisible="false" toolTip="Twitter do Curso">
 			<s:Image x="11.5" y="9.65" width="75" height="75"
-					 source="imagens/icones/Youtube_128x128.png"/>
+					 source="imagens/icones/Twitter_128x128.png"/>
 			<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="13"
-					 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
+					 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
 					 verticalAlign="middle"/>
 		</s:BorderContainer>
-		<s:BorderContainer includeIn="atividadesAluno,chatAluno,desktopAluno" x="97.35" y="195.4" width="570"
-						   height="260" borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false">
-			<mx:DateChooser includeIn="desktopAluno" left="10" bottom="10" width="271"
-							height="202" change="onSelecionaData(event)"/>
-			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
-					 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
-					 verticalAlign="justify"
-					 text.atividadesAluno="Atividades"
-					 text.aulasAluno="Arquivos de aulas"
-					 text.chatAluno="Chat"
-					 text.forumAluno="Arquivos de aulas"
-					 text.videoaulasAluno="Arquivos de aulas"/>
-			<s:Label includeIn="desktopAluno" x="301.35" y="26" width="260" height="18" fontSize="15"
-					 fontWeight="normal" text="Atividades deste mês" textAlign="center"
-					 verticalAlign="justify"/>
-			<s:List x="304" y="48" width="255" height="202"></s:List>
-			<mx:VRule x="290" y="10" height="240"/>
-		</s:BorderContainer>
-		<mx:VRule x="378" y="503" width="27" height="77"/>
-		<s:BorderContainer includeIn="aulasAluno" x="97.35" y="195.4" width="570" height="260"
+		<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno" x="660" y="40" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false">
-			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
-					 text="Aulas" textAlign="center" verticalAlign="justify"/>
-			<mx:VRule x="290" y="10" height="240"/>
+						   dropShadowVisible="false" toolTip="Informações e Configurações do Aluno">
+			<s:Image source="imagens/icones/aluno.png"
+					 x.atividadesAluno="11.5" y.atividadesAluno="9.65" width.atividadesAluno="75"
+					 height.atividadesAluno="75"
+					 x.aulasAluno="11.5" y.aulasAluno="9.65" width.aulasAluno="75"
+					 height.aulasAluno="75"
+					 x.chatAluno="11.5" y.chatAluno="9.65" width.chatAluno="75"
+					 height.chatAluno="75"
+					 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75"
+					 height.desktopAluno="75"
+					 horizontalCenter.desktopProf="4"
+					 source.desktopProf="imagens/icones/professor.png"
+					 verticalCenter.desktopProf="-19"
+					 x.forumAluno="11.5" y.forumAluno="9.65" width.forumAluno="75"
+					 height.forumAluno="75"/>
+			<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
+					 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
+					 verticalAlign="middle"
+					 fontSize.desktopAluno="13"
+					 x.desktopProf="-0.1" width.desktopProf="100" fontSize.desktopProf="13"
+					 text.desktopProf="PROFESSOR"/>
 		</s:BorderContainer>
-		<s:BorderContainer includeIn="videoaulasAluno" x="97.35" y="195.4" width="570" height="260"
-						   borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false">
-			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
-					 text="Vídeo Aulas" textAlign="center" verticalAlign="justify"/>
-			<s:List x="304" y="48" width="255" height="202"></s:List>
-			<mx:VRule x="290" y="10" height="240"/>
+		<s:BorderContainer includeIn="login,loginEsqueci" x="305" y="10.35" width="200" height="190" borderVisible="false"
+						   cornerRadius="50">
+			<s:Image x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
 		</s:BorderContainer>
-		<s:BorderContainer includeIn="forumAluno" x="97.35" y="195.4" width="570" height="260"
-						   borderVisible="false" buttonMode="true" cornerRadius="10"
-						   dropShadowVisible="false">
-			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
-					 text="Fórum" textAlign="center" verticalAlign="justify"/>
-			<s:List x="304" y="48" width="255" height="202"></s:List>
-			<mx:VRule x="290" y="10" height="240"/>
+		<s:BorderContainer id="loginBg" includeIn="login,loginEsqueci" borderVisible="false"
+						   x.login="281" y.login="221" width.login="248" height.login="179"
+						   backgroundAlpha.login="0.5" cornerRadius.login="10"
+						   x.loginEsqueci="281" y.loginEsqueci="221" width.loginEsqueci="248"
+						   height.loginEsqueci="240" backgroundAlpha.loginEsqueci="0.5"
+						   cornerRadius.loginEsqueci="10">
+			<s:Button includeIn="login" right="10" top="142" label="Entrar" click="onEntrar(event)"/>
+			<s:TextInput id="login" left="61" top="61" width="177"
+						 enabled.loginEsqueci="false"/>
+			<s:TextInput id="senha" left="61" top="91" width="177"
+						 displayAsPassword.login="true"
+						 enabled.loginEsqueci="false"/>
+			<s:TextInput id="email" includeIn="loginEsqueci" left="61" top="177" width="177"/>
+			<s:Label id="lblEmail" includeIn="loginEsqueci" x="10" y="183" width="45" color="#000000"
+					 fontWeight="bold" text="E-mail" textAlign="right"/>
+			<s:Label x="10" y="67" color="#000000" fontWeight="bold" text="Usuário"/>
+			<s:Label x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19" fontWeight="bold"
+					 text="Acessar o AVAS"
+					 width.login="228" textAlign.login="center" verticalAlign.login="middle"
+					 y.loginEsqueci="10" width.loginEsqueci="228" height.loginEsqueci="21"
+					 textAlign.loginEsqueci="center" verticalAlign.loginEsqueci="bottom"/>
+			<s:Label x="10" y="98" width="45" color="#000000" fontWeight="bold" text="Senha"
+					 textAlign="right"/>
+			<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
+					 text="esqueci minha senha" textDecoration="underline" click="onEsqueci(event)" 
+					 buttonMode="true"/>
+			<s:RichText id="infoEsqueci" includeIn="loginEsqueci" x="10" y="125" width="228" height="46"
+						fontSize="10"
+						text="Se deseja recuperar os dados de acesso a sua conta, preencha o campo e-mail e clique no botão abaixo para receber informações de como proceder."/>
+			<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
+					  label="Recuperar" click="onRecuperar(event)"/>
 		</s:BorderContainer>
-	</s:BorderContainer>
-	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno" x="10" y="513" width="780" height="77"
-					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
-		<s:Button id="aulas" x="17" y="11" width="116" height="57" label="        Aulas"
-				  click="btAulas_clickHandler(event)" cornerRadius="7"/>
-		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"
-				 mouseChildren.atividadesAluno="false"
-				 mouseChildren.aulasAluno="false"
-				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
-				 mouseEnabled.desktopAluno="false"
-				 mouseChildren.desktopProf="false"
-				 mouseChildren.forumAluno="false"
-				 mouseChildren.videoaulasAluno="false"/>
-		<s:Button id="atividades" x="139" y="11" width="116" height="57" label="          Atividades"
+		<s:Image id="balao1" visible="false" includeIn="login" x="518" y="232" width="258" height="73"
+				 source="imagens/icones/balao.png"/>
+		<s:Image id="balao2" visible="false" includeIn="login" x="537" y="249" source="imagens/icones/warning.png"/>
+		<s:TextArea id="balao3" visible="false" includeIn="login" x="576" y="246" height="36" borderVisible="false"
+					contentBackgroundAlpha="0.0" text="O nome de usuário deve ter ao menos 4 caracteres"/>
+	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,aulasProf,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno,youtube"
+					   x="10" y="513" width="780" height="77" backgroundAlpha="0.5"
+					   borderVisible="false" cornerRadius="20">
+		<s:Button x="137" y="11" width="116" height="57" label="        Aulas"
+				  click="btAulas_clickHandler(event)" cornerRadius="7"
+				  click.desktopProf="btAulasProf(event)"/>
+		<s:Image x="145" y="23" source="imagens/icones/Chalkboard.png"/>
+		<s:Button x="259" y="11" width="116" height="57" label="          Atividades"
 				  click="btAtividades_clickHandler(event)" cornerRadius="7"/>
-		<s:Button id="chat" x="406" y="11" width="116" height="57" label="        Chat"
+		<s:Button x="526" y="11" width="116" height="57" label="        Chat"
 				  click="btChat_clickHandler(event)" cornerRadius="7"/>
-		<s:Image x="413" y="23" source="imagens/icones/chat.png"
-				 mouseChildren.atividadesAluno="false"
-				 mouseChildren.aulasAluno="false"
-				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
-				 mouseEnabled.desktopAluno="false"
-				 mouseChildren.desktopProf="false"
-				 mouseChildren.forumAluno="false"
-				 mouseChildren.videoaulasAluno="false"/>
-		<s:Image x="146" y="25" source="imagens/icones/atividades.png"
-				 mouseChildren.atividadesAluno="false"
-				 mouseChildren.aulasAluno="false"
-				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
-				 mouseEnabled.desktopAluno="false"
-				 mouseChildren.desktopProf="false"
-				 mouseChildren.forumAluno="false"
-				 mouseChildren.videoaulasAluno="false"/>
-		<s:Button id="forum" x="527" y="11" width="116" height="57" label="          Fórum"
+		<s:Image x="533" y="23" source="imagens/icones/chat.png"/>
+		<s:Image x="266" y="25" source="imagens/icones/atividades.png"/>
+		<s:Button x="647" y="11" width="116" height="57" label="          Fórum"
 				  click="btForum_clickHandler(event)" cornerRadius="7"/>
-		<s:Image id="_" x="536" y="25" source="imagens/icones/forum.png"
-				 mouseChildren.atividadesAluno="false"
-				 mouseChildren.aulasAluno="false"
-				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
-				 mouseEnabled.desktopAluno="false"
-				 mouseChildren.desktopProf="false"
-				 mouseChildren.forumAluno="false"
-				 mouseChildren.videoaulasAluno="false"/>
-		<s:Button id="video_aulas" x="261" y="11" width="116" height="57"
-				  label="          Vídeo Aulas" click="btVideoAulas_clickHandler(event)"
-				  cornerRadius="7"/>
-		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"
-				 mouseChildren.atividadesAluno="false"
-				 mouseChildren.aulasAluno="false"
-				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
-				 mouseEnabled.desktopAluno="false"
-				 mouseChildren.desktopProf="false"
-				 mouseChildren.forumAluno="false"
-				 mouseChildren.videoaulasAluno="false"/>
+		<s:Image x="656" y="25" source="imagens/icones/forum.png"/>
+		<s:Button x="381" y="11" width="116" height="57" label="          Vídeo Aulas"
+				  click="btVideoAulas_clickHandler(event)" cornerRadius="7"
+				  click.youtube="btVideoAulas_clickHandler(event)"/>
+		<s:Image x="387" y="25" source="imagens/icones/videoaula.png"/>
+		<mx:VRule x="498" y="2" width="27" height="77"/>
+		<mx:VRule x="116" y="2" width="27" height="77"/>
+		<s:Button x="7" y="11" width="116" height="57" label="        Início"
+				  click="onHome(event)" cornerRadius="7"/>
+		<s:Image x="15" y="23" width="34" height="37" source="imagens/icones/Home.png"/>
+		
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="desktopAluno,desktopProf" x="170" y="40" width="100" height="120"
-					   borderVisible="false" buttonMode="true" cornerRadius="10"
-					   dropShadowVisible="false" toolTip="Twitter do Curso">
-		<s:Image x="11.5" y="9.65" width="75" height="75"
-				 source="imagens/icones/Twitter_128x128.png"/>
-		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="13"
-				 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
-				 verticalAlign="middle"/>
-	</s:BorderContainer>
-	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno" x="660" y="40" width="100" height="120"
-					   borderVisible="false" buttonMode="true" cornerRadius="10"
-					   dropShadowVisible="false" toolTip="Informações e Configurações do Aluno">
-		<s:Image source="imagens/icones/aluno.png"
-				 x.atividadesAluno="11.5" y.atividadesAluno="9.65" width.atividadesAluno="75"
-				 height.atividadesAluno="75"
-				 x.aulasAluno="11.5" y.aulasAluno="9.65" width.aulasAluno="75"
-				 height.aulasAluno="75"
-				 x.chatAluno="11.5" y.chatAluno="9.65" width.chatAluno="75" height.chatAluno="75"
-				 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75"
-				 height.desktopAluno="75"
-				 horizontalCenter.desktopProf="4" source.desktopProf="imagens/icones/professor.png"
-				 verticalCenter.desktopProf="-19"
-				 x.forumAluno="11.5" y.forumAluno="9.65" width.forumAluno="75"
-				 height.forumAluno="75"
-				 x.videoaulasAluno="11.5" y.videoaulasAluno="9.65" width.videoaulasAluno="75"
-				 height.videoaulasAluno="75"/>
-		<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="14"
-				 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
-				 verticalAlign="middle"
-				 fontSize.desktopAluno="13"
-				 x.desktopProf="-0.1" width.desktopProf="100" fontSize.desktopProf="13"
-				 text.desktopProf="PROFESSOR"/>
-	</s:BorderContainer>
-	<s:BorderContainer includeIn="login,loginEsqueci" x="305" y="10.35" width="200" height="190" borderVisible="false"
-					   cornerRadius="50">
-		<s:Image x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
-	</s:BorderContainer>
-	<s:TitleWindow id="avasTelaErro" includeIn="erro" x="206" y="137" width="380" height="211"
-				   title="AVAS">
-		<s:Image left="9" top="6" source="imagens/icones/error.png"/>
-		<s:BorderContainer id="detalhes" left="0" right="0" bottom="0" height="67"
-						   backgroundColor="#EDEDED" borderVisible="false" color="#777777">
-			<s:TextArea id="detalhesErro" left="10" right="10" top="10" bottom="10"
-						borderVisible="false" contentBackgroundAlpha="0.0"
-						text="- O usuário não existe ou a senha não está correta"/>
-		</s:BorderContainer>
-		<s:Button id="btnFechar" right="10" bottom="75" label="Fechar"
-				  click="button1_clickHandler(event)"/>
-		<s:Label id="titulo" y="16" left="50" right="52" color="#51659E" fontWeight="bold"
-				 horizontalCenter="-1" text="Usuário ou senha inválido(s)"/>
-		<mx:LinkButton id="btnDetalhes" left="10" bottom="75" label="Detalhes"
-					   click="linkbutton1_clickHandler(event)" textDecoration="underline"/>
-		<s:TextArea id="msgErro" left="11" right="9" top="41" bottom="96" borderVisible="false"
-					contentBackgroundAlpha="0.0" text="Por favor, digite suas credenciais novamente."/>
-	</s:TitleWindow>
-	<s:BorderContainer id="loginBg" includeIn="login,loginEsqueci" borderVisible="false"
-					   x.login="281" y.login="221" width.login="248" height.login="179"
-					   backgroundAlpha.login="0.5" cornerRadius.login="10"
-					   x.loginEsqueci="281" y.loginEsqueci="221" width.loginEsqueci="248"
-					   height.loginEsqueci="240" backgroundAlpha.loginEsqueci="0.5"
-					   cornerRadius.loginEsqueci="10">
-		<s:Button includeIn="login" right="10" top="142" label="Entrar" click="onEntrar(event)"/>
-		<s:TextInput id="login" left="61" top="61" width="177"
-					 enabled.loginEsqueci="false"/>
-		<s:TextInput id="senha" left="61" top="91" width="177"
-					 enabled.loginEsqueci="false"/>
-		<s:TextInput id="email" includeIn="loginEsqueci" left="61" top="177" width="177"/>
-		<s:Label id="lblEmail" includeIn="loginEsqueci" x="10" y="183" width="45" color="#000000"
-				 fontWeight="bold" text="E-mail" textAlign="right"/>
-		<s:Label x="10" y="67" color="#000000" fontWeight="bold" text="Usuário"/>
-		<s:Label x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19" fontWeight="bold"
-				 text="Acessar o AVAS"
-				 width.login="228" textAlign.login="center" verticalAlign.login="middle"
-				 y.loginEsqueci="10" width.loginEsqueci="228" height.loginEsqueci="21"
-				 textAlign.loginEsqueci="center" verticalAlign.loginEsqueci="bottom"/>
-		<s:Label x="10" y="98" width="45" color="#000000" fontWeight="bold" text="Senha"
-				 textAlign="right"/>
-		<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
-				 text="esqueci minha senha" textDecoration="underline" click="onEsqueci(event)" 
-				 buttonMode="true"/>
-		<s:RichText id="infoEsqueci" includeIn="loginEsqueci" x="10" y="125" width="228" height="46"
-					fontSize="10"
-					text="Se deseja recuperar os dados de acesso a sua conta, preencha o campo e-mail e clique no botão abaixo para receber informações de como proceder."/>
-		<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
-				  label="Recuperar" click="onRecuperar(event)"/>
-	</s:BorderContainer>
-	<s:Image id="balao1" visible="false" includeIn="login" x="518" y="232" width="258" height="73"
-			 source="imagens/icones/balao.png"/>
-	<s:Image id="balao2" visible="false" includeIn="login" x="537" y="249" source="imagens/icones/warning.png"/>
-	<s:TextArea id="balao3" visible="false" includeIn="login" x="576" y="246" height="36" borderVisible="false"
-				contentBackgroundAlpha="0.0" text="O nome de usuário deve ter ao menos 4 caracteres"/>
+		
 </s:Application>
