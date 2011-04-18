@@ -137,7 +137,7 @@
 					   x.aulas="10" y.aulas="10"
 					   x.desktopAluno="10" y.desktopAluno="10"
 					   x.desktopProf="10" y.desktopProf="10">
-		<s:BorderContainer includeIn="desktopAluno" x="30" y="30" width="100" height="120"
+		<s:BorderContainer includeIn="desktopAluno,desktopProf" x="30" y="30" width="100" height="120"
 						   borderVisible="false" buttonMode="true" cornerRadius="10"
 						   dropShadowVisible="false" rollOverColor="#3882F1"
 						   toolTip="Vídeos Relacionados">
@@ -177,7 +177,7 @@
 				  cornerRadius="7"/>
 		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"/>
 	</s:BorderContainer>
-	<s:BorderContainer includeIn="desktopAluno" x="170" y="40" width="100" height="120"
+	<s:BorderContainer includeIn="desktopAluno,desktopProf" x="170" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
 					   dropShadowVisible="false" toolTip="Twitter do Curso">
 		<s:Image x="11.5" y="9.65" width="75" height="75"
