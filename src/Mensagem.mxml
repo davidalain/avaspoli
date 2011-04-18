@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spark:TitleWindowCloseButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+								  xmlns:s="library://ns.adobe.com/flex/spark"
+								  xmlns:mx="library://ns.adobe.com/flex/mx"
+								  xmlns:spark="spark.skins.spark.*"
+								  width="400" height="288" currentState="mensagem"
+								  height.mensagem="202">
+	<spark:states>
+		<s:State name="mensagem"/>
+		<s:State name="mensagemDetalhe"/>
+	</spark:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[       
+			import mx.controls.Text;
+			import mx.managers.PopUpManager;
+			
+			// A reference to the TextInput control in which to put the result.
+			public var loginName:Text;
+			
+			[Bindable]
+			public var msg:String;
+			[Bindable]
+			public var detalhe:String;
+			[Bindable]
+			public var titulo:String;
+			
+			
+			protected function onFechar(event:MouseEvent):void{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+
+
+			protected function onDetalhe(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (this.currentState == "mensagemDetalhe") {
+					this.currentState = "mensagem";
+				} else {
+					this.currentState = "mensagemDetalhe";
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<s:BorderContainer x="0" y="0" width="400" height="288" borderVisible="false" cornerRadius="10"
+					   height.mensagem="202">
+		<s:Image left="9" top="16" source="imagens/icones/error.png"/>
+		<s:BorderContainer id="detalhes" includeIn="mensagemDetalhe" left="0" right="0" bottom="0"
+						   height="87" backgroundColor="#EDEDED" borderVisible="false"
+						   color="#777777">
+			<s:TextArea id="detalhesErro" left="10" right="10" top="9" bottom="11"
+						borderVisible="false" color="#3D3939" contentBackgroundAlpha="0.0"
+						text="{this.detalhe}"/>
+		</s:BorderContainer>
+		<s:Button id="btnFechar" right="10" width="28" label="X" click="onFechar(event)"
+				  fontWeight="bold"
+				  right.mensagem="10" top.mensagem="10"
+				  right.mensagemDetalhe="10" top.mensagemDetalhe="10" height.mensagemDetalhe="21"/>
+		<s:Label id="title" y="16" left="50" right="52" height="34" color="#51659E" fontSize="16"
+				 fontWeight="bold" horizontalCenter="-1" text="{this.titulo}" textAlign="left"
+				 verticalAlign="middle"/>
+		<mx:LinkButton id="btnDetalhes" left="10" bottom="95" label="Detalhes"
+					   click="onDetalhe(event)" textDecoration="underline"
+					   left.mensagem="10" bottom.mensagem="14"
+					   label.mensagemDetalhe="Ocultar Detalhes"/>
+		<s:TextArea id="msgErro" left="11" right="9" top="81" bottom="125" borderVisible="false"
+					contentBackgroundAlpha="0.0" text="{this.msg}"
+					left.mensagem="11" right.mensagem="9" top.mensagem="64" bottom.mensagem="62"
+					left.mensagemDetalhe="11" right.mensagemDetalhe="9" top.mensagemDetalhe="64"
+					bottom.mensagemDetalhe="142" selectable="false"/>
+	</s:BorderContainer>
+</spark:TitleWindowCloseButtonSkin>

@@ -42,6 +42,7 @@
 			protected function onSair(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				this.currentState = "desktopProf";
 			}
 
 		]]>
@@ -73,10 +74,10 @@
 				 height="128" click="onSelecionaImagem(event)" source="imagens/icones/Pictures.png"
 				 x.buscarImagem="177" y.buscarImagem="96" smooth.buscarImagem="true"
 				 smooth.selecionarTipo="true"
-				 x.uploading="177" y.uploading="96" smooth.uploading="true"/>
+				 x.uploading="177" y.uploading="96" smooth.uploading="true" buttonMode="true"/>
 		<s:Image includeIn="selecionarTipo" x="177" y="96" width="128" height="128" smooth="true"
-				 source="imagens/icones/VideoClip.png"/>
-		<s:Image includeIn="selecionarTipo" x="327" y="96" width="128" height="128" smooth="true"
+				 source="imagens/icones/VideoClip.png"  buttonMode="true"/>
+		<s:Image  buttonMode="true" includeIn="selecionarTipo" x="327" y="96" width="128" height="128" smooth="true"
 				 source="imagens/icones/Document.png"/>
 		<s:Label includeIn="buscarImagem,selecionarTipo,uploading" x="27" y="232" width="128"
 				 height="18" fontSize="13" text="Imagens (jpg ou png)" textAlign="center"
@@ -92,17 +93,14 @@
 				 text="Documentos (doc)" textAlign="center" verticalAlign="top"/>
 		<s:TextInput includeIn="buscarImagem" x="38" y="271" width="219"
 					 text="C:\Documentos\Aula2.jpg"/>
-		<s:Button includeIn="buscarImagem" x="263" y="271" width="106" label="Buscar Arquivo"
+		<s:Button includeIn="buscarImagem" x="263" y="271" width="106" label="Buscar Arquivo"/>
+		<s:Button includeIn="buscarImagem" x="375" y="271" label="Enviar"
 				  click="onUploadImage(event)"/>
-		<s:Button includeIn="buscarImagem" x="375" y="271" label="Enviar"/>
-		<mx:ProgressBar includeIn="uploading" x="44" y="259" width="380"/>
 		<ns1:Loading includeIn="uploading" x="133" y="281"/>
 		<s:RichText includeIn="sucesso" x="37" y="107" width="411" height="13" fontSize="14"
 					text="Arquivo enviado com sucesso. "/>
-		<s:Button includeIn="sucesso" x="88" y="153" width="145" height="50" label="Enviar outro"
+		<s:Button includeIn="sucesso" x="168" y="153" width="145" height="50" label="Enviar outro"
 				  click="onEnviarOutro(event)"/>
-		<s:Button includeIn="sucesso" x="265" y="153" width="145" height="50" label="Sair"
-				  click="onSair(event)"/>
 		
 	</s:BorderContainer>
 	
