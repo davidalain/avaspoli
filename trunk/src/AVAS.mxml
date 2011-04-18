@@ -109,7 +109,7 @@
 
 			protected function btAulas_clickHandler(event:MouseEvent):void
 			{
-				this.currentState = "aulas";
+				this.currentState = "aulasAluno";
 			}
 
 
@@ -201,38 +201,90 @@
 					 text.chatAluno="Chat"
 					 text.forumAluno="Arquivos de aulas"
 					 text.videoaulasAluno="Arquivos de aulas"/>
-			<s:Label x="301.35" y="26" width="260" height="18" fontSize="15" fontWeight="normal"
-					 text="Atividades deste mês" textAlign="center" verticalAlign="justify"
-					 text.atividadesAluno="Arquivos complementares"
-					 text.aulasAluno="Arquivos complementares"
-					 text.chatAluno="Arquivos complementares"
-					 text.forumAluno="Arquivos complementares"
-					 text.videoaulasAluno="Arquivos complementares"/>
+			<s:Label includeIn="desktopAluno" x="301.35" y="26" width="260" height="18" fontSize="15"
+					 fontWeight="normal" text="Atividades deste mês" textAlign="center"
+					 verticalAlign="justify"/>
 			<s:List x="304" y="48" width="255" height="202"></s:List>
 			<mx:VRule x="290" y="10" height="240"/>
 		</s:BorderContainer>
 		<mx:VRule x="378" y="503" width="27" height="77"/>
+		<s:BorderContainer includeIn="aulasAluno" x="97.35" y="195.4" width="570" height="260"
+						   borderVisible="false" buttonMode="true" cornerRadius="10"
+						   dropShadowVisible="false">
+			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
+					 text="Aulas" textAlign="center" verticalAlign="justify"/>
+			<mx:VRule x="290" y="10" height="240"/>
+		</s:BorderContainer>
+		<s:BorderContainer includeIn="videoaulasAluno" x="97.35" y="195.4" width="570" height="260"
+						   borderVisible="false" buttonMode="true" cornerRadius="10"
+						   dropShadowVisible="false">
+			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
+					 text="Vídeo Aulas" textAlign="center" verticalAlign="justify"/>
+			<s:List x="304" y="48" width="255" height="202"></s:List>
+			<mx:VRule x="290" y="10" height="240"/>
+		</s:BorderContainer>
+		<s:BorderContainer includeIn="forumAluno" x="97.35" y="195.4" width="570" height="260"
+						   borderVisible="false" buttonMode="true" cornerRadius="10"
+						   dropShadowVisible="false">
+			<s:Label left="10" bottom="215" width="271" height="18" fontSize="15" fontWeight="normal"
+					 text="Fórum" textAlign="center" verticalAlign="justify"/>
+			<s:List x="304" y="48" width="255" height="202"></s:List>
+			<mx:VRule x="290" y="10" height="240"/>
+		</s:BorderContainer>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="atividadesAluno,aulasAluno,chatAluno,desktopAluno,desktopProf,forumAluno,videoaulasAluno" x="10" y="513" width="780" height="77"
 					   backgroundAlpha="0.5" borderVisible="false" cornerRadius="20">
-		<s:Button x="17" y="11" width="116" height="57" label="        Aulas" cornerRadius="7"
-				  label.desktopAluno="        Aulas"
-				  click.desktopAluno="btAulas_clickHandler(event)"/>
-		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"/>
-		<s:Button x="139" y="11" width="116" height="57" label="          Atividades"
-				  cornerRadius="7"
-				  click.desktopAluno="btAtividades_clickHandler(event)"/>
-		<s:Button x="406" y="11" width="116" height="57" label="        Chat" cornerRadius="7"
-				  click.desktopAluno="btChat_clickHandler(event)"/>
-		<s:Image x="413" y="23" source="imagens/icones/chat.png"/>
-		<s:Image x="146" y="25" source="imagens/icones/atividades.png"/>
-		<s:Button x="527" y="11" width="116" height="57" label="          Fórum" cornerRadius="7"
-				  click.desktopAluno="btForum_clickHandler(event)"/>
-		<s:Image x="536" y="25" source="imagens/icones/forum.png"/>
-		<s:Button x="261" y="11" width="116" height="57" label="          Vídeo Aulas"
-				  cornerRadius="7"
-				  click.desktopAluno="btVideoAulas_clickHandler(event)"/>
-		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"/>
+		<s:Button id="aulas" x="17" y="11" width="116" height="57" label="        Aulas"
+				  click="btAulas_clickHandler(event)" cornerRadius="7"/>
+		<s:Image x="25" y="23" source="imagens/icones/Chalkboard.png"
+				 mouseChildren.atividadesAluno="false"
+				 mouseChildren.aulasAluno="false"
+				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
+				 mouseEnabled.desktopAluno="false"
+				 mouseChildren.desktopProf="false"
+				 mouseChildren.forumAluno="false"
+				 mouseChildren.videoaulasAluno="false"/>
+		<s:Button id="atividades" x="139" y="11" width="116" height="57" label="          Atividades"
+				  click="btAtividades_clickHandler(event)" cornerRadius="7"/>
+		<s:Button id="chat" x="406" y="11" width="116" height="57" label="        Chat"
+				  click="btChat_clickHandler(event)" cornerRadius="7"/>
+		<s:Image x="413" y="23" source="imagens/icones/chat.png"
+				 mouseChildren.atividadesAluno="false"
+				 mouseChildren.aulasAluno="false"
+				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
+				 mouseEnabled.desktopAluno="false"
+				 mouseChildren.desktopProf="false"
+				 mouseChildren.forumAluno="false"
+				 mouseChildren.videoaulasAluno="false"/>
+		<s:Image x="146" y="25" source="imagens/icones/atividades.png"
+				 mouseChildren.atividadesAluno="false"
+				 mouseChildren.aulasAluno="false"
+				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
+				 mouseEnabled.desktopAluno="false"
+				 mouseChildren.desktopProf="false"
+				 mouseChildren.forumAluno="false"
+				 mouseChildren.videoaulasAluno="false"/>
+		<s:Button id="forum" x="527" y="11" width="116" height="57" label="          Fórum"
+				  click="btForum_clickHandler(event)" cornerRadius="7"/>
+		<s:Image id="_" x="536" y="25" source="imagens/icones/forum.png"
+				 mouseChildren.atividadesAluno="false"
+				 mouseChildren.aulasAluno="false"
+				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
+				 mouseEnabled.desktopAluno="false"
+				 mouseChildren.desktopProf="false"
+				 mouseChildren.forumAluno="false"
+				 mouseChildren.videoaulasAluno="false"/>
+		<s:Button id="video_aulas" x="261" y="11" width="116" height="57"
+				  label="          Vídeo Aulas" click="btVideoAulas_clickHandler(event)"
+				  cornerRadius="7"/>
+		<s:Image x="267" y="25" source="imagens/icones/videoaula.png"
+				 mouseChildren.atividadesAluno="false"
+				 mouseChildren.aulasAluno="false"
+				 mouseChildren.chatAluno="false" mouseEnabled.chatAluno="false"
+				 mouseEnabled.desktopAluno="false"
+				 mouseChildren.desktopProf="false"
+				 mouseChildren.forumAluno="false"
+				 mouseChildren.videoaulasAluno="false"/>
 	</s:BorderContainer>
 	<s:BorderContainer includeIn="desktopAluno,desktopProf" x="170" y="40" width="100" height="120"
 					   borderVisible="false" buttonMode="true" cornerRadius="10"
