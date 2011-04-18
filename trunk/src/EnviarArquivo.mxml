@@ -61,13 +61,13 @@
 		<s:RichText id="migalha" left="10" right="10" top="10" height="24" fontSize="18"
 					textDecoration="underline" verticalAlign="middle"
 					fontSize.buscarImagem="16"
-					text.buscarImagem="selecionar tipo &gt; buscar aquivo"
+					text.buscarImagem="selecionar tipo &gt; buscar arquivo"
 					fontSize.selecionarTipo="16" text.selecionarTipo="selecionar tipo"
 					fontSize.sucesso="16"
-					text.sucesso="selecionar tipo &gt; buscar aquivo &gt; enviando &gt; fim do envio"
+					text.sucesso="selecionar tipo &gt; buscar arquivo &gt; enviando &gt; fim do envio"
 					left.uploading="10" right.uploading="113" top.uploading="10"
 					fontSize.uploading="16"
-					text.uploading="selecionar tipo &gt; buscar aquivo &gt; enviando"/>
+					text.uploading="selecionar tipo &gt; buscar arquivo &gt; enviando"/>
 		<s:Image includeIn="buscarImagem,selecionarTipo,uploading" x="27" y="96" width="128"
 				 height="128" click="onSelecionaImagem(event)" source="imagens/icones/Pictures.png"
 				 x.buscarImagem="177" y.buscarImagem="96" smooth.buscarImagem="true"
