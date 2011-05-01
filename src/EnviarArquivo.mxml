@@ -45,6 +45,18 @@
 				this.currentState = "desktopProf";
 			}
 
+
+			protected function showInfo(event:MouseEvent):void
+			{
+				this.aviso2.visible = true;
+			}
+
+
+			protected function Aviso_clickHandler(event:MouseEvent):void
+			{
+				this.aviso2.visible = false;
+			}
+
 		]]>
 	</fx:Script>
 	
@@ -86,7 +98,7 @@
 				 x.uploading="177" y.uploading="232"/>
 		<s:Label left="10" top="48" width="459" height="24" fontSize="20" text="Enviar Mídia"
 				 textAlign="center" verticalAlign="top"/>
-		<s:Label includeIn="selecionarTipo" x="177" y="232" width="128"
+		<s:Label includeIn="selecionarTipo" x="176" y="232" width="128"
 				 height="18" fontSize="13" text="Vídeos (avi, mp4, etc)" textAlign="center"
 				 verticalAlign="top"/>
 		<s:Label includeIn="selecionarTipo" x="327" y="232" width="128" height="18" fontSize="13"
@@ -101,6 +113,18 @@
 					text="Arquivo enviado com sucesso. "/>
 		<s:Button includeIn="sucesso" x="168" y="153" width="145" height="50" label="Enviar outro"
 				  click="onEnviarOutro(event)"/>
+		<s:Image id="info" x="306" y="43" width="24" height="24" mouseOver="showInfo(event)"
+				 smooth="true" source="imagens/icones/icon_big.gif"/>
+		<s:BorderContainer id="aviso2" includeIn="selecionarTipo" visible="false" x="324" y="-18"
+						   width="277" height="91" backgroundAlpha="0.0" borderAlpha="0.0"
+						   borderVisible="false" click="Aviso_clickHandler(event)">
+			<s:Image left="0" right="0" top="0" height="84" source="imagens/icones/aviso1.png"/>
+			<s:TextArea left="69" right="25" top="23" height="43" borderVisible="false"
+						contentBackgroundAlpha="0.0"
+						text="O primeiro passo é escolher o tipo de mídia que será enviada"/>
+			
+			
+		</s:BorderContainer>
 		
 	</s:BorderContainer>
 	
