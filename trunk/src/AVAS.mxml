@@ -189,6 +189,18 @@
 				this.currentState = "aulasProf";
 			}
 
+
+			protected function showInfo(event:MouseEvent):void
+			{
+				this.aviso.visible = true;
+			}
+			
+
+			protected function Aviso_clickHandler(event:MouseEvent):void
+			{
+				this.aviso.visible = false;
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -349,6 +361,8 @@
 						text="Se deseja recuperar os dados de acesso a sua conta, preencha o campo e-mail e clique no botão abaixo para receber informações de como proceder."/>
 			<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
 					  label="Recuperar" click="onRecuperar(event)"/>
+			<s:Image id="info" includeIn="login" x="216" y="8" width="24" height="24"
+					 mouseOver="showInfo(event)" smooth="true" source="imagens/icones/icon_big.gif"/>
 		</s:BorderContainer>
 		<s:Image id="balao1" visible="false" includeIn="login" x="518" y="232" width="258" height="73"
 				 source="imagens/icones/balao.png"/>
@@ -380,6 +394,17 @@
 		<s:Button x="7" y="11" width="116" height="57" label="        Início"
 				  click="onHome(event)" cornerRadius="7"/>
 		<s:Image x="15" y="23" width="34" height="37" source="imagens/icones/Home.png"/>
+		
+	</s:BorderContainer>
+	
+	<s:BorderContainer id="aviso" includeIn="login" visible="false" x="513" y="165" width="277"
+					   height="91" backgroundAlpha="0.0" borderAlpha="0.0" borderVisible="false"
+					   click="Aviso_clickHandler(event)">
+		<s:Image left="0" right="0" top="0" height="84" source="imagens/icones/aviso1.png"/>
+		<s:TextArea left="58" right="19" top="9" height="71" borderVisible="false"
+					contentBackgroundAlpha="0.0"
+					text="Para entrar no sistema preencha os campos com as devidas informações recebidas no momento da matrícula."/>
+		
 		
 	</s:BorderContainer>
 		
