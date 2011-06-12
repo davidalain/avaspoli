@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:ns2007="http://www.degrafa.com/2007"
+		 xmlns:ns1="*"
+		 width="478" height="330">
+	<s:states>
+		<s:State name="selecionarTipo"/>
+		<s:State name="buscarImagem"/>
+		<s:State name="uploading"/>
+		<s:State name="sucesso"/>
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.setTimeout;
+			
+			private function onSelecionaImagem (e:MouseEvent):void {
+				this.currentState = "buscarImagem";
+			}
+			
+
+			protected function onUploadImage(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				this.currentState = "uploading";
+				setTimeout(mostarSucesso, 2000);
+			}
+			
+			private function mostarSucesso ():void {
+				this.currentState = "sucesso";
+			}
+
+
+			protected function onEnviarOutro(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "selecionarTipo";
+			}
+
+
+			protected function onSair(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "desktopProf";
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:BorderContainer x="0" y="0" width="479" height="331" borderVisible="false" cornerRadius="10"
+					   x.buscarImagem="0" y.buscarImagem="0"
+					   x.sucesso="0" y.sucesso="0"
+					   x.uploading="0" y.uploading="0">
+		<s:RichText id="migalhaFade" includeIn="selecionarTipo" left="10" right="10" top="10"
+					height="24" color="#BEB7B7" fontSize="16"
+					text="selecionar tipo &gt; buscar arquivo &gt; enviando &gt; fim do envio"
+					textDecoration="underline" verticalAlign="middle"/>
+		<s:RichText id="migalha" left="10" right="10" top="10" height="24" fontSize="18"
+					textDecoration="underline" verticalAlign="middle"
+					fontSize.buscarImagem="16"
+					text.buscarImagem="selecionar tipo &gt; buscar arquivo"
+					left.selecionarTipo="10" right.selecionarTipo="10" top.selecionarTipo="10"
+					fontSize.selecionarTipo="16" text.selecionarTipo="selecionar tipo"
+					fontSize.sucesso="16"
+					text.sucesso="selecionar tipo &gt; buscar arquivo &gt; enviando &gt; fim do envio"
+					left.uploading="10" right.uploading="113" top.uploading="10"
+					fontSize.uploading="16"
+					text.uploading="selecionar tipo &gt; buscar arquivo &gt; enviando"/>
+		<s:Image includeIn="buscarImagem,selecionarTipo,uploading" x="27" y="96" width="128"
+				 height="128" click="onSelecionaImagem(event)" source="imagens/icones/Pictures.png"
+				 x.buscarImagem="177" y.buscarImagem="96" smooth.buscarImagem="true"
+				 smooth.selecionarTipo="true"
+				 x.uploading="177" y.uploading="96" smooth.uploading="true" buttonMode="true"/>
+		<s:Image includeIn="selecionarTipo" x="177" y="96" width="128" height="128" smooth="true"
+				 source="imagens/icones/VideoClip.png"  buttonMode="true"/>
+		<s:Image  buttonMode="true" includeIn="selecionarTipo" x="327" y="96" width="128" height="128" smooth="true"
+				 source="imagens/icones/Document.png"/>
+		<s:Label includeIn="buscarImagem,selecionarTipo,uploading" x="27" y="232" width="128"
+				 height="18" fontSize="13" text="Imagens (jpg ou png)" textAlign="center"
+				 verticalAlign="top"
+				 x.buscarImagem="177" y.buscarImagem="232"
+				 x.uploading="177" y.uploading="232"/>
+		<s:Label left="10" top="48" width="459" height="24" fontSize="20" text="Enviar Mídia"
+				 textAlign="center" verticalAlign="top"/>
+		<s:Label includeIn="selecionarTipo" x="177" y="232" width="128"
+				 height="18" fontSize="13" text="Vídeos (avi, mp4, etc)" textAlign="center"
+				 verticalAlign="top"/>
+		<s:Label includeIn="selecionarTipo" x="327" y="232" width="128" height="18" fontSize="13"
+				 text="Documentos (doc)" textAlign="center" verticalAlign="top"/>
+		<s:TextInput includeIn="buscarImagem" x="38" y="271" width="219"
+					 text="C:\Documentos\Aula2.jpg"/>
+		<s:Button includeIn="buscarImagem" x="263" y="271" width="106" label="Buscar Arquivo"/>
+		<s:Button includeIn="buscarImagem" x="375" y="271" label="Enviar"
+				  click="onUploadImage(event)"/>
+		<ns1:Loading includeIn="uploading" x="133" y="281"/>
+		<s:RichText includeIn="sucesso" x="37" y="107" width="411" height="13" fontSize="14"
+					text="Arquivo enviado com sucesso. "/>
+		<s:Button includeIn="sucesso" x="168" y="153" width="145" height="50" label="Enviar outro"
+				  click="onEnviarOutro(event)"/>
+		
+	</s:BorderContainer>
+	
+</s:Group>

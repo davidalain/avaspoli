@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:ns1="*"
+			   minWidth="800" minHeight="624" creationComplete="onInit(event)" 
+			   currentState="login" >
+				<!-- método de inicialização -->
+			
+
+	<fx:Script>
+		<![CDATA[			
+			import mx.controls.Alert;
+			import mx.controls.FileSystemHistoryButton;
+			import mx.effects.easing.Back;
+			import mx.effects.easing.Linear;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.FileEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.PopUpManager;
+			
+			private var desktop:String;
+			
+			protected function onInitialize(event:Event):void {
+				this.stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullScreen);
+			}
+			
+			protected function onInit(event:FlexEvent):void {
+				// TODO Auto-generated method stub
+				//this.statusBar.visible = false;
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, onChangeState);
+				this.addEventListener(Event.ADDED_TO_STAGE, onInitialize);
+				this.status = "Ambiente Virtual de Aprendizagem";
+				
+				//this.nativeWindow.maximize();
+			}
+			
+			protected function onFullScreen(event:FullScreenEvent):void {
+				this.currentState = "fullScreen";
+				//this.conteudo.abrir();
+			}
+			
+			protected function onChangeState(event:StateChangeEvent):void {
+				if (this.conteudo != null) {
+					this.conteudo.fechar();
+				}
+				/* if (playerTube != null) {
+					playerTube.stop();
+				} */
+				
+				if (this.currentState == "biblioteca") {
+					this.arquivosCurso.directory.nativePath = File.applicationDirectory.nativePath + "\\biblioteca";
+					this.arquivosAluno.directory.nativePath = File.applicationDirectory.nativePath + "\\biblioteca";
+				}
+				
+				if (this.currentState == "desktopAluno") {
+					this.bloquearBotao(this.btHome);
+				}
+				
+				
+			}
+
+			protected function onEntrar(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				if(this.login.text.length<4){
+					this.balao1.visible = this.balao2.visible = this.balao3.visible = true;
+				} else {
+					this.balao1.visible = this.balao2.visible = this.balao3.visible = false;
+					if (this.validarLogin ()) {
+						if (this.login.text == "prof") {
+							this.currentState = "desktopProf";
+						} else {
+							this.currentState = "desktopAluno";
+						}	
+						this.desktop = this.currentState;				
+					}
+				}
+			}
+			
+			private function mostrarMsg (msg:String, titulo:String = "Mensagem", detalhe:String = "*Não há detalhes para esta mensagem."):void {				
+				var mensagem:Mensagem = Mensagem(PopUpManager.createPopUp( this, Mensagem , true));
+				mensagem.msg = msg;
+				mensagem.detalhe = detalhe;
+				mensagem.titulo = titulo;
+				mensagem.x = (this.stage.stageWidth - mensagem.width) / 2;
+				mensagem.y = (this.stage.stageHeight - mensagem.height) / 2;
+			}
+			
+			private function validarLogin ():Boolean {
+				if (this.login.text == "prof" && this.senha.text == "123" ) {	
+					return true;
+				}
+				if (this.login.text == "") {
+					this.login.setStyle("borderColor", 0xFF0000);
+					this.login.setStyle("color", 0xFF0000);
+					//this.currentState = "erro"; 
+					this.mostrarMsg ("O campo Usuário deve ser preenchido para efetuar entrar no sistema.", "Atenção: Campo Vazio", "Os campos de usuário e senha são obrigatórios.");
+					return false;
+				} else {
+					
+					this.login.setStyle("borderColor", 0x000000);
+					this.login.setStyle("color", 0x000000);
+				}
+				
+				if (this.senha.text == "") {
+					this.senha.setStyle("borderColor", 0xFF0000);
+					this.senha.setStyle("color", 0xFF0000);
+					this.mostrarMsg ("O campo 'Senha' não pode ser vazio.", "Atenção: Campo Vazio",  "Os campos de usuário e senha são obrigatórios.");
+					
+					return false;
+				} else {
+					this.senha.setStyle("borderColor", 0x000000);
+					this.senha.setStyle("color", 0x000000);
+				}
+				
+				if (this.login.text != "aluno" || this.senha.text != "123" ) {					
+					this.login.setStyle("borderColor", 0xFF0000);
+					this.login.setStyle("color", 0xFF0000);
+					this.senha.setStyle("borderColor", 0xFF0000);
+					this.senha.setStyle("color", 0xFF0000);					
+					this.mostrarMsg ("Usuário ou Senha inválidos.", "Atenção: Dados não Conferem"," Clique em 'esqueci minha senha' para saber como proceder caso tenha esquecido seu usuário ou senha.");
+					return false;
+				} else {
+					this.login.setStyle("borderColor", 0x000000);
+					this.login.setStyle("color", 0x000000);
+					this.senha.setStyle("borderColor", 0x000000);
+					this.senha.setStyle("color", 0x000000);
+				}
+				
+				return true;
+			}
+
+
+			protected function onSelecionaData(event:CalendarLayoutChangeEvent):void {
+				// TODO Auto-generated method stub
+			}
+			
+			protected function onEsqueci(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				this.currentState = "loginEsqueci";
+			}
+			
+			
+			protected function onRecuperar(event:MouseEvent):void {
+				// TODO Auto-generated method stub
+				this.currentState = "login";
+				this.mostrarMsg ("E-mail enviado com sucesso. Verifique seu e-mail e siga as instruções.", "Informação");
+			}
+
+			protected function btAulas_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "aulasAluno";
+				this.conteudo.abrir();
+				this.bloquearBotao(event.currentTarget as Button);
+			}
+
+
+			protected function btAtividades_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "atividadesAluno";
+				this.bloquearBotao(event.currentTarget as Button);
+			}
+
+
+			protected function btVideoAulas_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "videoaulasAluno";
+				/* if (playerTube != null) {
+					playerTube.search("flashcampbrasil");
+				} */
+				this.bloquearBotao(event.currentTarget as Button);
+			}
+
+
+			protected function btChat_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "chatAluno";
+				this.bloquearBotao(event.currentTarget as Button);
+				
+				this.janelaChat.visible = true;
+				
+			}
+
+
+			protected function btForum_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "forumAluno";
+				this.bloquearBotao(event.currentTarget as Button);
+			}
+			
+			
+			private function bloquearBotao (bt:Button = null):void {
+				this.btAtiv.enabled = this.btAulas.enabled = this.btChat.enabled = 
+					this.btForum.enabled = this.btHome.enabled = this.btVideos.enabled = true;
+				
+				if (bt != null) {
+					bt.enabled = false;
+				}
+			}
+			
+			protected function onHome(event:MouseEvent):void
+			{
+				this.currentState = this.desktop;
+				this.bloquearBotao(event.currentTarget as Button);
+			}
+			
+			protected function onClickTwitter(event:MouseEvent):void {
+				this.currentState = "twitter";
+//				this.twitter.location = "http://twitter.com/search?q=usabilidade";
+				this.bloquearBotao ();
+			}
+			
+			protected function onYoutube(event:MouseEvent):void
+			{
+				this.currentState = "youtube";
+				/* if (playerTube != null) {
+					playerTube.search();
+				} */
+				this.bloquearBotao ();
+			}
+			
+			
+			protected function onClickLib(event:MouseEvent):void
+			{
+				this.currentState = "biblioteca";	
+				this.bloquearBotao ();			
+			}
+			
+
+
+			protected function btAulasProf(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "aulasProf";
+			}
+
+
+			protected function onOpenFile(event:MouseEvent):void
+			{
+				var fileList:FileSystemList = event.currentTarget as FileSystemList;
+				// Referêcia do arquivo clicado
+				var arquivo:File = File(fileList.selectedItem);
+				// Referência do diretório reservado para o aplicativo (não é o de instalação)
+				var arquivoTemp:File = File.applicationStorageDirectory;
+				
+				// Cria um arquivo com o mesmo nome no diretório
+				arquivoTemp = arquivoTemp.resolvePath(arquivo.name);
+				// Cria uma cópia do arquivo original no arquivo temporário
+				arquivo.copyTo(arquivoTemp, true);
+				// Abre o arquivo no diretório padrão
+				arquivoTemp.openWithDefaultApplication();
+				
+			}
+			
+			protected function showInfo(event:MouseEvent):void
+			{
+				this.aviso.visible = true;
+			}
+						
+			protected function Aviso_clickHandler(event:MouseEvent):void
+			{
+				this.aviso.visible = false;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="login"/>
+		<s:State name="loginEsqueci"/>		
+		<s:State name="desktopAluno"/>
+		<s:State name="desktopProf"/>
+		<s:State name="aulasAluno"/>
+		<s:State name="atividadesAluno"/>
+		<s:State name="videoaulasAluno"/>
+		<s:State name="forumAluno"/>
+		<s:State name="chatAluno"/>
+		<s:State name="youtube"/>
+		<s:State name="aulasProf"/>
+		<s:State name="twitter"/>
+		<s:State name="biblioteca"/>
+		<s:State name="fullScreen"/>
+	</s:states>	
+	
+	<!-- Define the transition to animate the change of view state. -->
+	<s:transitions>
+		<mx:Transition>
+			<s:Sequence 
+				targets="{[loginBg]}">
+				<mx:Resize duration="250" easingFunction="Back.easeOut"/>
+				
+			</s:Sequence>
+		</mx:Transition>
+	</s:transitions>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Image scaleMode="stretch" source="imagens/wallpaper2.png"
+		   left="0" right="0" top="0" bottom="0"
+		   x="0" y="0" width="800" height="600"/>
+	<s:BorderContainer id="geral"
+					   includeIn="atividadesAluno,aulasAluno,aulasProf,biblioteca,chatAluno,desktopAluno,desktopProf,forumAluno,login,loginEsqueci,twitter,videoaulasAluno,youtube"
+					   width="100%" height="600" backgroundAlpha="0" borderVisible="false"
+					   horizontalCenter="0" verticalCenter="0">
+		
+			<s:BorderContainer id="area"
+							   includeIn="atividadesAluno,aulasAluno,aulasProf,biblioteca,chatAluno,desktopAluno,desktopProf,forumAluno,twitter,videoaulasAluno,youtube"
+							   width="780" height="495" backgroundAlpha="0.5" borderVisible="false"
+							   cornerRadius="20" horizontalCenter="0"
+							   x.atividadesAluno="10" y.atividadesAluno="10"
+							   y.aulasAluno="10"
+							   x.aulasProf="10" y.aulasProf="10"
+							   x.biblioteca="10" y.biblioteca="10"
+							   x.chatAluno="10" y.chatAluno="10"
+							   y.desktopAluno="10"
+							   x.desktopProf="10" y.desktopProf="10"
+							   x.forumAluno="10" y.forumAluno="10"
+							   x.twitter="10" y.twitter="10"
+							   x.videoaulasAluno="10" y.videoaulasAluno="10"
+							   x.youtube="10" y.youtube="10">
+				<s:BorderContainer includeIn="desktopAluno" x="280" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" click="onYoutube(event)"
+								   cornerRadius="10" dropShadowVisible="false"
+								   rollOverColor="#3882F1" toolTip="Vídeos Relacionados">
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Youtube_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="atividadesAluno,desktopAluno" x="97.35" y="195.4"
+								   width="570" height="260" borderVisible="false" buttonMode="true"
+								   cornerRadius="10" dropShadowVisible="false"
+								   x.atividadesAluno="97.35" y.atividadesAluno="125.399994">
+					<mx:DateChooser left="10" bottom="10" width="271" height="202"
+									change="onSelecionaData(event)"/>
+					<s:Label width="271" height="18" fontSize="15" fontWeight="normal"
+							 text="Calendário de Atividades e Vídeo Aulas" textAlign="center"
+							 verticalAlign="justify"
+							 left.atividadesAluno="10" bottom.atividadesAluno="215"
+							 text.atividadesAluno="Atividades"
+							 left.desktopAluno="10" bottom.desktopAluno="215"/>
+					<s:Label x="301.35" y="26" width="260" height="18" fontSize="15"
+							 fontWeight="normal" text="Atividades deste mês" textAlign="center"
+							 verticalAlign="justify"
+							 text.atividadesAluno="Atividades"/>
+					<s:List x="304" y="48" width="255" height="202">
+						<s:ArrayCollection>
+							<fx:Object label="05/05 - Exercício 1" />
+							<fx:Object label="15/05 - Produção Textual: Usabilidade" />
+						</s:ArrayCollection>
+					</s:List>
+					<mx:VRule x="290" y="10" height="240"/>
+				</s:BorderContainer>
+				<s:RichText includeIn="youtube" x="50.8" y="20.8" width="177" height="30"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="24" fontWeight="bold"
+							text="&gt; Youtube" textAlign="left" verticalAlign="top"/>
+				<s:RichText includeIn="youtube" x="9.95" y="144.4" width="406" height="17"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+							text="Canal do curso de Usabilidade" textAlign="left" verticalAlign="top"/>
+				<s:Image includeIn="youtube" x="9.65" y="10.45" width="34" height="37"
+						 source="imagens/icones/Home.png"/>
+				<ns1:EnviarArquivo includeIn="aulasProf" x="150.55" y="90.7">
+				</ns1:EnviarArquivo>
+				<s:RichText includeIn="twitter" x="50.8" y="20.8" width="177" height="30"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="24" fontWeight="bold"
+							text="&gt; Twitter" textAlign="left" verticalAlign="top"/>
+				<s:Image includeIn="twitter" x="9.65" y="10.45" width="34" height="37"
+						 source="imagens/icones/Home.png"/>
+				<s:BorderContainer includeIn="desktopAluno" x="400" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true"
+								   click="onClickTwitter(event)" cornerRadius="10"
+								   dropShadowVisible="false" toolTip="Twitter do Curso">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Twitter_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				
+				<s:BorderContainer includeIn="desktopAluno,desktopProf" width="100" height="120"
+								   borderVisible="false" buttonMode="true" cornerRadius="10"
+								   dropShadowVisible="false"
+								   toolTip="Informações, Cursos e Configurações do Aluno"
+								   x.desktopAluno="640" y.desktopAluno="30"
+								   x.desktopProf="640" y.desktopProf="30">
+					<s:Image smooth="true" source="imagens/icones/aluno.png"
+							 x.desktopAluno="11.5" y.desktopAluno="9.65" width.desktopAluno="75"
+							 height.desktopAluno="75"
+							 horizontalCenter.desktopProf="4"
+							 source.desktopProf="imagens/icones/professor.png"
+							 verticalCenter.desktopProf="-19"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana"
+							 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
+							 verticalAlign="middle"
+							 fontSize.desktopAluno="12"
+							 x.desktopProf="-0.1" width.desktopProf="100" fontSize.desktopProf="13"
+							 text.desktopProf="PROFESSOR"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="desktopAluno" x="40" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true"
+								   click="onClickLib(event)" cornerRadius="10"
+								   dropShadowVisible="false" toolTip="Biblioteca">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="file:///E:/POLI/2011.1/IHC/Projeto/Flex/avaspoli/src/imagens/icones/Library.png"/>
+					<s:Label x="-0.1" y="87" width="102" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="BIBLIOTECA" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				
+				<mx:FileSystemList id="arquivosCurso" includeIn="biblioteca" x="142.55" y="219.85"
+								   width="236" height="250"
+								   doubleClick="onOpenFile(event)"/>
+				
+				<mx:FileSystemList id="arquivosAluno" includeIn="biblioteca" x="402.65" y="219.85"
+								   width="236" height="250" 
+								   doubleClick="onOpenFile(event)"/>
+				
+				<s:RichText includeIn="biblioteca" x="402.65" y="200.2" width="234" height="17"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+							text="Documentos do Aluno" textAlign="left" verticalAlign="top"/>
+				<s:RichText includeIn="biblioteca" x="50.8" y="20.8" width="177" height="30"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="24" fontWeight="bold"
+							text="&gt; Biblioteca" textAlign="left" verticalAlign="top"/>
+				<s:RichText includeIn="biblioteca" x="142.55" y="200.2" width="234" height="17"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+							text="Documentos do Curso" textAlign="left" verticalAlign="top"/>
+				<s:Image includeIn="biblioteca" x="9.65" y="10.45" width="34" height="37"
+						 source="imagens/icones/Home.png"/>
+				<ns1:Chat id="janelaChat" includeIn="chatAluno" x="197.35" y="219.75">
+				</ns1:Chat>
+				<s:BorderContainer includeIn="chatAluno" x="280" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" click="onYoutube(event)"
+								   cornerRadius="10" dropShadowVisible="false"
+								   rollOverColor="#3882F1" toolTip="Vídeos Relacionados">
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Youtube_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="chatAluno" x="400" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true"
+								   click="onClickTwitter(event)" cornerRadius="10"
+								   dropShadowVisible="false" toolTip="Twitter do Curso">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Twitter_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="chatAluno" x="640" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" cornerRadius="10"
+								   dropShadowVisible="false"
+								   toolTip="Informações e Configurações do Aluno">
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/aluno.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="ALUNO" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="chatAluno" x="40" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" click="onClickLib(event)"
+								   cornerRadius="10" dropShadowVisible="false"
+								   toolTip="Twitter do Curso">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="file:///E:/POLI/2011.1/IHC/Projeto/Flex/avaspoli/src/imagens/icones/Library.png"/>
+					<s:Label x="-0.1" y="87" width="102" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="BIBLIOTECA" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="desktopProf" x="280" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" click="onYoutube(event)"
+								   cornerRadius="10" dropShadowVisible="false"
+								   rollOverColor="#3882F1" toolTip="Vídeos Relacionados">
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Youtube_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="YOUTUBE" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="desktopProf" x="400" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true"
+								   click="onClickTwitter(event)" cornerRadius="10"
+								   dropShadowVisible="false" toolTip="Twitter do Curso">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="imagens/icones/Twitter_128x128.png"/>
+					<s:Label x="9.9" y="87" width="82" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="TWITTER" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:BorderContainer includeIn="desktopProf" x="40" y="30" width="100" height="120"
+								   borderVisible="false" buttonMode="true" click="onClickLib(event)"
+								   cornerRadius="10" dropShadowVisible="false"
+								   toolTip="Twitter do Curso">
+					
+					<s:Image x="11.5" y="9.65" width="75" height="75" smooth="true"
+							 source="file:///E:/POLI/2011.1/IHC/Projeto/Flex/avaspoli/src/imagens/icones/Library.png"/>
+					<s:Label x="-0.1" y="87" width="102" height="25" fontFamily="Verdana" fontSize="12"
+							 fontStyle="normal" fontWeight="bold" text="BIBLIOTECA" textAlign="center"
+							 verticalAlign="middle"/>
+				</s:BorderContainer>
+				<s:Image includeIn="videoaulasAluno" x="284.9" y="176.7" width="485" height="303"
+						 source="imagens/videoplayer.png" scaleMode="letterbox"/>
+				<ns1:Chat id="janelaChat0" includeIn="videoaulasAluno" x="15.5" y="176"
+						  width="261" height="307">
+				</ns1:Chat>
+				<s:Image includeIn="youtube" x="271.2" y="164.8" width="490" height="320" scaleMode="letterbox"
+						 source="imagens/videoplayer.png"/>
+				<s:List includeIn="youtube" x="9" y="164.65" width="255" height="320">
+					<s:ArrayCollection>
+						<fx:Object label="Design Paralelo" />
+						<fx:Object label="Acessibilidade" />
+						<fx:Object label="Mobile" />
+						<fx:Object label="Web" />
+						<fx:Object label="Desktop" />
+					</s:ArrayCollection>
+				</s:List>
+				<s:RichText includeIn="twitter" x="10.95" y="78.35" width="179" height="17"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+							text="Busca: Usabilidade" textAlign="left"
+							verticalAlign="top"/>
+				<s:RichText includeIn="twitter" x="385.75" y="55.65" width="179" height="17"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="14" fontWeight="bold"
+							text="faça sua busca" textAlign="left" verticalAlign="top"/>
+				<s:Image includeIn="twitter" x="10.45" y="98.6" width="370" height="382.45" smooth="true"
+						 source="imagens/twitterBusca.png"/>
+				<s:Image includeIn="twitter" x="386.45" y="98.6" width="370" height="382.45"
+						 smooth="true" source="imagens/twitterBusca.png"/>
+				<s:TextInput includeIn="twitter" x="385" y="77" width="290" text="design da interação"/>
+				<s:Button includeIn="twitter" x="685" y="78" label="Buscar"/>
+				<s:RichText includeIn="videoaulasAluno" x="8.95" y="101.4" width="406" height="64"
+							color="#FFFFFF" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+							text="Aula 02: Design da Interação&#xd;Professor: Carlos Pontes&#xd;Modo: Online ao vivo" textAlign="left"
+							verticalAlign="top"/>
+				<ns1:Slide id="conteudo" includeIn="aulasAluno" x="-0.4" y="0.5" width="781"
+						   height="494"/>
+								
+				
+			</s:BorderContainer>
+			<s:BorderContainer includeIn="login,loginEsqueci" y="10.35" width="200" height="190"
+							   borderVisible="false" cornerRadius="50"
+							   horizontalCenter.login="5"
+							   horizontalCenter.loginEsqueci="5">
+				<s:Image x="10" y="9.65" width="181" height="168" source="imagens/logo.png"/>
+			</s:BorderContainer>
+			<s:BorderContainer id="loginBg" includeIn="login,loginEsqueci" borderVisible="false"
+							   y.login="221" width.login="248" height.login="179"
+							   backgroundAlpha.login="0.5" cornerRadius.login="10"
+							   horizontalCenter.login="5"
+							   y.loginEsqueci="221" width.loginEsqueci="248" height.loginEsqueci="240"
+							   backgroundAlpha.loginEsqueci="0.5" cornerRadius.loginEsqueci="10"
+							   horizontalCenter.loginEsqueci="5">
+				<s:Button includeIn="login" right="10" top="142" label="Entrar" click="onEntrar(event)"/>
+				<s:TextInput id="login" left="61" top="61" width="177"
+							 text.login="aluno"
+							 enabled.loginEsqueci="false"/>
+				<s:TextInput id="senha" left="61" top="91" width="177"
+							 displayAsPassword.login="true" text.login="123"
+							 enabled.loginEsqueci="false"/>
+				<s:TextInput id="email" includeIn="loginEsqueci" left="61" top="177" width="177"/>
+				<s:Label id="lblEmail" includeIn="loginEsqueci" x="10" y="183" width="45" color="#000000"
+						 fontWeight="bold" text="E-mail" textAlign="right"/>
+				<s:Label x="10" y="67" color="#000000" fontWeight="bold" text="Usuário"/>
+				<s:Label x="10" y="12" color="#000000" fontFamily="Verdana" fontSize="19"
+						 fontWeight="bold" text="Acessar o AVAS"
+						 x.login="37" width.login="174" textAlign.login="center"
+						 verticalAlign.login="middle"
+						 y.loginEsqueci="10" width.loginEsqueci="228" height.loginEsqueci="21"
+						 textAlign.loginEsqueci="center" verticalAlign.loginEsqueci="bottom"/>
+				<s:Label x="10" y="98" width="45" color="#000000" fontWeight="bold" text="Senha"
+						 textAlign="right"/>
+				<s:Label includeIn="login" x="10" y="148" color="#000000" fontWeight="normal"
+						 text="esqueci minha senha" textDecoration="underline" click="onEsqueci(event)" 
+						 buttonMode="true"/>
+				<s:RichText id="infoEsqueci" includeIn="loginEsqueci" x="10" y="125" width="228" height="46"
+							fontSize="10"
+							text="Se deseja recuperar os dados de acesso a sua conta, preencha o campo e-mail e clique no botão abaixo para receber informações de como proceder."/>
+				<s:Button id="recuperar" includeIn="loginEsqueci" x="155.65" y="209.3" width="82"
+						  label="Recuperar" click="onRecuperar(event)"/>
+				<s:Image id="info" includeIn="login" x="216" y="8" width="24" height="24"
+						 mouseOver="showInfo(event)" smooth="true"
+						 source="imagens/icones/icon_big.gif" buttonMode="true"/>
+			</s:BorderContainer>
+			<s:Image id="balao1" includeIn="login" visible="false" y="232" width="258" height="73"
+					 horizontalCenter="260" source="imagens/icones/balao.png"/>
+			<s:Image id="balao2" visible="false" includeIn="login" x="537" y="249" 
+					 horizontalCenter="170" source="imagens/icones/warning.png"/>
+			<s:TextArea id="balao3" visible="false" includeIn="login" x="576" y="246" 
+						horizontalCenter="290" height="36" borderVisible="false"
+						contentBackgroundAlpha="0.0" text="O nome de usuário deve ter ao menos 4 caracteres"/>
+		<s:BorderContainer id="barra"
+						   includeIn="atividadesAluno,aulasAluno,aulasProf,biblioteca,chatAluno,desktopAluno,desktopProf,forumAluno,twitter,videoaulasAluno,youtube"
+						   y="513" width="780" height="77" backgroundAlpha="0.5"
+						   borderVisible="false" cornerRadius="20" horizontalCenter="0"
+						   x.atividadesAluno="10"
+						   x.aulasAluno="10"
+						   x.aulasProf="10"
+						   x.biblioteca="10"
+						   x.chatAluno="10"
+						   x.desktopProf="10"
+						   x.forumAluno="10"
+						   x.twitter="10"
+						   x.videoaulasAluno="10"
+						   x.youtube="10">
+			<s:Button id="btAulas" x="137" y="11" width="116" height="57" label="        Aulas"
+					  click="btAulas_clickHandler(event)" cornerRadius="7" focusColor="#FFFF00"
+					  focusThickness="3" tabEnabled="true" tabFocusEnabled="true" tabIndex="2"
+					  label.biblioteca="        Aulas"
+					  click.desktopProf="btAulasProf(event)"/>
+			<s:Image x="145" y="23" source="imagens/icones/Chalkboard.png"
+					 smooth.desktopAluno="true"/>
+			<s:Button id="btAtiv" x="259" y="11" width="116" height="57" label="          Atividades"
+					  click="btAtividades_clickHandler(event)" cornerRadius="7" tabEnabled="true"  tabFocusEnabled="true"  focusColor="#FFFF00" focusThickness="3" tabIndex="3" />
+			<s:Button id="btForum" x="647" y="11" width="116" height="57" label="          Fórum"
+					  click="btForum_clickHandler(event)" cornerRadius="7"  tabEnabled="true"  tabFocusEnabled="true"  focusColor="#FFFF00" focusThickness="3" tabIndex="6" />
+			<s:Button id="btChat" x="526" y="11" width="116" height="57" label="        Chat"
+					  click="btChat_clickHandler(event)" cornerRadius="7"  tabEnabled="true"  tabFocusEnabled="true"  focusColor="#FFFF00" focusThickness="3" tabIndex="5" />
+			<s:Image x="533" y="23" source="imagens/icones/chat.png"
+					 smooth.desktopAluno="true"/>
+			<s:Image x="266" y="25" source="imagens/icones/atividades.png"
+					 smooth.desktopAluno="true"/>
+			<s:Button x="647" y="11" width="116" height="57" label="          Fórum"
+					  click="btForum_clickHandler(event)" cornerRadius="7"/>
+			<s:Image x="656" y="25" source="imagens/icones/forum.png"
+					 smooth.desktopAluno="true"/>
+			<s:Button id="btVideos" x="381" y="11" width="116" height="57" label="          Vídeo Aulas"
+					  click="btVideoAulas_clickHandler(event)" cornerRadius="7" tabEnabled="true"  tabFocusEnabled="true"  focusColor="#FFFF00" focusThickness="3" tabIndex="4" 
+					  click.youtube="btVideoAulas_clickHandler(event)"/>
+			<s:Image x="387" y="25" source="imagens/icones/videoaula.png"
+					 smooth.desktopAluno="true"/>
+			<mx:VRule x="498" y="2" width="27" height="77"
+					  x.desktopAluno="498" y.desktopAluno="10" height.desktopAluno="60"/>
+			<mx:VRule x="116" y="2" width="27" height="77"
+					  x.desktopAluno="116" y.desktopAluno="10" height.desktopAluno="60"/>
+			<s:Button id="btHome" x="7" y="11" width="116" height="57" label="        Início"
+					  click="onHome(event)" cornerRadius="7" focusColor="#FFFF00" focusThickness="3"
+					  tabEnabled="true" tabFocusEnabled="true" tabIndex="1"
+					  mouseFocusEnabled.desktopAluno="true"/>
+			<s:Image x="15" y="23" width="34" height="37" source="imagens/icones/Home.png"
+					 smooth.desktopAluno="true"/>
+		</s:BorderContainer>
+		<s:BorderContainer id="aviso" includeIn="login" visible="false" x="530.35" y="162.3"
+						   width="277" height="91" backgroundAlpha="0.0" borderAlpha="0.0"
+						   borderVisible="false" click="Aviso_clickHandler(event)">
+			<s:Image left="0" top="0" width="277" height="84" source="imagens/icones/aviso1.png"/>
+			<s:TextArea left="58" right="19" top="9" height="71" borderVisible="false"
+						contentBackgroundAlpha="0.0"
+						text="Para entrar no sistema preencha os campos com as devidas informações recebidas no momento da matrícula."/>
+			
+			
+		</s:BorderContainer>
+		
+	</s:BorderContainer>
+	<ns1:Slide includeIn="fullScreen" x="0" y="0" width="100%" height="100%">
+	</ns1:Slide>
+</s:WindowedApplication>

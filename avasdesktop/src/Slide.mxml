@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="800" height="600" contentBackgroundColor="#DADADA" creationComplete="onInit(event)"
+		 width.slides="781" height.slides="494">
+	<s:states>
+		<s:State name="slides"/>
+		<s:State name="telaInteira"/>
+	</s:states>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Array id="buttonArray">
+			<fx:Object label="Voltar" />
+			<fx:Object label="Avançar" />	
+		</fx:Array>
+		<mx:Fade id="fadeIn" alphaFrom=".1" alphaTo="1.0" duration="1000"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.setTimeout;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			import mx.events.StateChangeEvent;
+			
+			private var swf:Array;
+			private var paginaID:int;
+			private var rect:Rectangle = new Rectangle(0,0,703,455);
+			
+			private  function onInit (e:FlexEvent):void {
+				//this.swf = ["swf/apresentacao.swf","swf/ConhecendoACabine.swf","swf/pedal.swf","swf/CertoxErrado.swf" ];
+				this.paginaID = 1;
+				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, onChange);
+			}
+			
+			private function onKeyDown(e:KeyboardEvent):void
+			{
+				// TODO Auto Generated method stub
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.ENTER) {
+					this.avancar();
+				} 
+				if (e.keyCode == Keyboard.LEFT) {
+					this.voltar();
+				} 
+			}
+					
+			public function abrir ():void {
+				this.conteudo.source = File.applicationDirectory.nativePath + "\\aulas\\Slide" + this.paginaID + ".PNG";
+			}
+			
+			public function fechar ():void {
+				this.conteudo.unloadAndStop();
+			}
+			
+			private function avancar ():void {
+				this.paginaID++;
+				if (this.paginaID > 28) {
+					this.paginaID = 28;
+				}
+				this.conteudo.source = File.applicationDirectory.nativePath + "\\aulas\\Slide" + this.paginaID + ".PNG";
+				
+			}
+			
+			private function voltar ():void {
+				this.paginaID--;
+				if (this.paginaID < 1) {
+					this.paginaID = 1
+				}	
+				this.conteudo.source = File.applicationDirectory.nativePath + "\\aulas\\Slide" + this.paginaID + ".PNG";
+				
+			}
+			
+			private  function onButtonBarClick (e:ItemClickEvent):void {
+				if (e.index == 1) {
+					this.avancar();
+				} else if (e.index == 0) {
+					this.voltar();
+				}
+			}
+			
+			
+			private function abrirArquivo () :void {
+				// Referêcia do arquivo
+				var arquivo:File = new File (File.applicationDirectory.nativePath + "\\aulas\\AVAS.ppsx");
+				// Referência do diretório reservado para o aplicativo (não é o de instalação)
+				var arquivoTemp:File = File.applicationStorageDirectory;
+				
+				// Cria um arquivo com o mesmo nome no diretório
+				arquivoTemp = arquivoTemp.resolvePath(arquivo.name);
+				// Cria uma cópia do arquivo original no arquivo temporário
+				arquivo.copyTo(arquivoTemp, true);
+				// Abre o arquivo no diretório padrão
+				arquivoTemp.openWithDefaultApplication();
+			}
+
+			protected function onFullScreen(event:MouseEvent):void {				
+				//this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				//setTimeout(mudar, 1000);
+				//this.currentState = "telaInteira";
+				this.abrirArquivo ();
+				
+			}
+
+			private function mudar ():void {
+				this.currentState = "telaInteira";
+			}
+
+			protected function onChange(event:StateChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.abrir();
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+		<mx:Image id="conteudo" scaleContent="true" smoothBitmapContent="false"
+				  y.slides="6.5" width.slides="598" height.slides="449" horizontalCenter.slides="0"
+				  width.telaInteira="800" height.telaInteira="600" horizontalCenter.telaInteira="0"
+				  verticalCenter.telaInteira="0"/>	
+	
+	<mx:ButtonBar id="buttonBar" includeIn="slides" visible="true" bottom="7"
+				  dataProvider="{buttonArray}" horizontalCenter="40"
+				  itemClick="onButtonBarClick(event)" showEffect="{fadeIn}"/>    
+	<s:Button id="telaInteira" includeIn="slides" right="10" bottom="8" label="Tela Inteira"
+			  click="onFullScreen(event)"/>
+	
+</s:Group>
