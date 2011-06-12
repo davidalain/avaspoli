@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spark:TitleWindowCloseButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="388"
+			   xmlns:spark="spark.skins.spark.*"
+			   creationComplete="init(event)">
+	
+	<fx:Script>
+		
+		<![CDATA[
+			import ca.newcommerce.youtube.data.AuthorData;
+			import ca.newcommerce.youtube.data.VideoData;
+			import ca.newcommerce.youtube.events.CommentFeedEvent;
+			import ca.newcommerce.youtube.events.VideoDataEvent;
+			import ca.newcommerce.youtube.events.VideoFeedEvent;
+			import ca.newcommerce.youtube.events.YouTubeEvent;
+			import ca.newcommerce.youtube.feeds.VideoFeed;
+			import ca.newcommerce.youtube.webservice.YouTubeFeedClient;
+			
+			import flash.utils.setTimeout;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
+			import mx.core.UIComponent;
+			import mx.events.DataGridEvent;
+			import mx.events.ItemClickEvent;
+			
+			protected var youTube:YouTubeFeedClient;
+			protected var loader:Loader = new Loader();
+			
+			[Bindable]
+			protected var ac:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			protected var player:Object;
+			
+			[Bindable]
+			//[Embed("imagens/control_play_blue.png")]
+			private var playIcon:Class;
+			
+			[Bindable]
+			//[Embed("imagens/control_pause_blue.png")]
+			private var pauseIcon:Class;
+			
+			[Bindable]
+//			[Embed("imagens/control_stop_blue.png")]
+			private var stopIcon:Class;
+			
+			protected function init(e:Event):void
+			{
+				youTube = YouTubeFeedClient.getInstance();
+				youTube.addEventListener(VideoFeedEvent.VIDEO_DATA_RECEIVED, onVideoDataReceived);
+				// Specifically allow the chromless player .swf access to our .swf.
+				try {
+					Security.allowDomain("http://www.youtube.com");
+				} catch (err:Error) {
+					trace ("Security.allowDomain");
+				}
+				this.loadVideoPlayer();
+			}
+			
+			public function search(busca:String = "usabilidade"):void
+			{
+				if (player == null) this.loadVideoPlayer();
+				if (youTube == null) {
+					youTube = YouTubeFeedClient.getInstance();
+					youTube.addEventListener(VideoFeedEvent.VIDEO_DATA_RECEIVED, onVideoDataReceived);
+				}
+				youTube.getVideos(busca);
+			}
+			
+			protected function onVideoDataReceived(event:VideoFeedEvent):void
+			{
+				ac.removeAll();
+				var vf:VideoFeed = event.feed as VideoFeed;
+				if (event.feed.totalResults > 0) 
+				{
+					var arr:Array = new Array();
+					if (event.feed != null && event.feed.count > 0) {
+						for (var i:int = 0; i<vf.count; i++) 
+						{
+							var vd:VideoData = vf.getAt(i) as VideoData;
+							ac.addItem(vd);
+							//trace("Data published " + vd.published + " updated " + vd.updated + " id " + vd.actualId + " mobile URL: " +  vd.mobileUrl + " Links: " + vd.links.first().href + " first author " + vd.authors.first().name);
+						}
+						// sort the grid data by Post Date (column index 2) by simulating the header click events, the 2nd time
+						// will make it descending... yes this is a major hack to avoid a bunch of sorting code :)!
+						//this.dg.dispatchEvent(new DataGridEvent(DataGridEvent.HEADER_RELEASE,false,true,2,null,0,null,null,0));
+						//this.dg.dispatchEvent(new DataGridEvent(DataGridEvent.HEADER_RELEASE,false,true,2,null,0,null,null,0));
+					}
+				}
+				else {
+					Alert.show("No matching videos found.");
+				}
+			}
+			
+			protected function onSWFLoaderIoError(event:IOErrorEvent):void {
+				trace('SWFLoader - IoError: ' + event.text);
+			}
+			
+			protected function loadVideoPlayer():void
+			{
+				// Load the YouTube Video Player SWF here and then we'll embed it to show how that API is used. It can then be used to respond 
+				// to different events. See this URL for more info: http://code.google.com/apis/youtube/flash_api_reference.html#Examples
+				loader.contentLoaderInfo.addEventListener(Event.INIT, onLoaderInit);
+				loader.load(new URLRequest("http://www.youtube.com/apiplayer?version=3"));
+			}
+			
+			protected function onLoaderInit(event:Event):void {
+				loader.content.addEventListener("onReady", onPlayerReady);
+				loader.content.addEventListener("onError", onPlayerError);
+				loader.content.addEventListener("onStateChange", onPlayerStateChange);
+				loader.content.addEventListener("onPlaybackQualityChange", 
+					onVideoPlaybackQualityChange);
+			}
+			
+			protected function onPlayerReady(event:Event):void {
+				// Event.data contains the event parameter, which is the Player API ID 
+				trace("player ready:", Object(event).data);
+				
+				player = loader.content;
+				player.setSize(240, 210);
+				swfLoader.addEventListener(flash.events.IOErrorEvent.IO_ERROR , onSWFLoaderIoError);
+				swfLoader.autoLoad = true;
+				swfLoader.scaleContent = true;
+				swfLoader.maintainAspectRatio = true;
+				swfLoader.load(player);
+			}
+			
+			protected function onVideoSelected():void
+			{
+				this.buttonBar.visible=true;
+				var vd:VideoData = dg.selectedItem as VideoData;
+				if (vd != null)
+				{
+					player.cueVideoById(vd.actualId);
+					txtTitle.text = vd.title;
+//					txtAuthor.text = "by: " + vd.authors.first().name;
+				}
+			}
+			
+			protected function onPlayerError(event:Event):void {
+				trace("Player error:", Object(event).data);
+			}
+			
+			protected function onPlayerStateChange(event:Event):void {
+				trace("Player state changed:", Object(event).data);
+			}
+			
+			protected function onVideoPlaybackQualityChange(event:Event):void {
+				trace("Video quality playback change:", Object(event).data);
+			}
+			
+			protected function buttonBarClickHandler(event:ItemClickEvent):void
+			{
+				if (event.index == 0)
+				{
+					player.playVideo();
+				}
+				else if (event.index == 1)
+				{
+					player.pauseVideo();
+				}
+				else if (event.index == 2)
+				{
+					player.stopVideo();
+				}
+			}
+			
+			public function stop ():void {
+				if (player != null) {
+					player.stopVideo();
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Array id="buttonArray">
+			<fx:Object label="Play"  />
+			<fx:Object label="Pause" />
+			<fx:Object label="Stop"  />		
+		</fx:Array>
+		<mx:Fade id="fadeIn" alphaFrom=".1" alphaTo="1.0" duration="1000"/>
+	</fx:Declarations>
+	
+	
+	<mx:Text id="txtTitle" left="345" right="10" top="15.35" height="27" color="#000000"/>
+	
+	<mx:SWFLoader id="swfLoader" left="345" right="10" top="50.05" bottom="50"
+				  autoLoad="true" scaleContent="true"/>
+	
+	<mx:ToggleButtonBar id="buttonBar" visible="false" left="347" bottom="10"
+						dataProvider="{buttonArray}" itemClick="buttonBarClickHandler(event)"
+						showEffect="{fadeIn}"/>    
+	
+	<mx:HBox id="hbox" y="50" left="10">
+	</mx:HBox>
+	<mx:DataGrid id="dg" left="10" top="15.3" bottom="10" width="328" dataProvider="{ac}"
+				 doubleClick="navigateToURL(new URLRequest(dg.selectedItem.mobileUrl))"
+				 doubleClickEnabled="true" itemClick="this.onVideoSelected()">
+		<mx:columns>
+			<mx:DataGridColumn dataField="title" headerText="title" width="140"/>
+			<mx:DataGridColumn dataField="content" headerText="Content" width="140"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</spark:TitleWindowCloseButtonSkin>
